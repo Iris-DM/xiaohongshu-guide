@@ -24,6 +24,7 @@ interface ImageItem {
 const steps: Array<{
   num: number;
   title: string;
+  subtitle?: string;
   description: string;
   formula?: string;
   example?: string;
@@ -34,6 +35,9 @@ const steps: Array<{
   checklist?: string[];
   elements?: Array<{ icon: typeof User; label: string; desc: string }>;
   images: ImageItem[];
+  problem?: { title: string; content: string };
+  solution?: { title: string; content: string; steps: string[] };
+  note?: string;
 }> = [
   {
     num: 1,
@@ -104,22 +108,26 @@ const steps: Array<{
   {
     num: 4,
     title: "去版权相关限制",
-    description: "优化生成的视频内容",
-    content:
-      "AI生成视频后，检查视频内容，根据需要调整指示词，去除敏感或不合适的内容，确保视频符合平台规范。",
-    tips: [
-      "检查视频时长是否合适",
-      "确认动作流畅自然",
-      "去除可能的敏感元素",
-      "调整不符合预期的细节",
-    ],
-    images: [
-      {
-        src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=300&fit=crop",
-        alt: "视频预览调整示意",
-        caption: "预览并调整视频效果",
-      },
-    ],
+    subtitle: "可选步骤",
+    description: "遇到版权限制时的解决方案",
+    problem: {
+      title: "问题描述",
+      content:
+        "在输入视频指令后，如果出现以下提示：\n\"抱歉，由于版权相关限制，暂时无法创作对应的内容，换其他主题试试吧。\"",
+    },
+    solution: {
+      title: "解决方法",
+      content:
+        "让AI去掉敏感内容，重新生成新的指令。可以提示AI：\n\"请去掉指令中可能涉及版权或敏感的内容，重新生成一个安全的视频生成指令。\"",
+      steps: [
+        "复制原有的视频指令",
+        "要求AI去除敏感元素（如特定品牌、人物、场景等）",
+        "让AI重新生成新的指令",
+        "用新指令重新生成视频",
+      ],
+    },
+    note: "如果没有遇到版权限制问题，可直接跳过此步骤，正常生成视频。",
+    images: [],
   },
   {
     num: 5,
@@ -176,7 +184,14 @@ export default function VideoGuidePage() {
 
               {/* 步骤内容 */}
               <div className="flex-1 min-w-0">
-                <h2 className="text-lg font-semibold text-foreground mb-1">{step.title}</h2>
+                <div className="flex items-center gap-2 mb-1">
+                  <h2 className="text-lg font-semibold text-foreground">{step.title}</h2>
+                  {step.subtitle && (
+                    <span className="text-xs px-2 py-0.5 bg-warning/20 text-warning rounded-full">
+                      {step.subtitle}
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm text-muted-foreground mb-4">{step.description}</p>
 
                 {/* 公式 */}
@@ -290,6 +305,52 @@ export default function VideoGuidePage() {
                         </li>
                       ))}
                     </ul>
+                  </div>
+                )}
+
+                {/* 问题描述 */}
+                {step.problem && (
+                  <div className="bg-destructive/10 rounded-xl p-4 border border-destructive/20 mb-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <AlertCircle className="w-4 h-4 text-destructive" />
+                      <p className="text-sm font-medium text-foreground">{step.problem.title}</p>
+                    </div>
+                    <p className="text-xs text-muted-foreground whitespace-pre-line leading-relaxed">
+                      {step.problem.content}
+                    </p>
+                  </div>
+                )}
+
+                {/* 解决方法 */}
+                {step.solution && (
+                  <div className="space-y-3 mb-4">
+                    <div className="bg-primary/5 rounded-xl p-4 border border-primary/20">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Lightbulb className="w-4 h-4 text-primary" />
+                        <p className="text-sm font-medium text-foreground">{step.solution.title}</p>
+                      </div>
+                      <p className="text-xs text-muted-foreground whitespace-pre-line leading-relaxed mb-3">
+                        {step.solution.content}
+                      </p>
+                      <div className="space-y-2">
+                        {step.solution.steps.map((s, idx) => (
+                          <div key={idx} className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                              <span className="text-xs text-primary font-medium">{idx + 1}</span>
+                            </div>
+                            <span>{s}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 注意提示 */}
+                {step.note && (
+                  <div className="bg-primary/10 rounded-lg p-3 flex items-start gap-2 border border-primary/20">
+                    <Lightbulb className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-muted-foreground">{step.note}</p>
                   </div>
                 )}
               </div>
