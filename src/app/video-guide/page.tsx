@@ -64,14 +64,27 @@ const steps: Array<{
     ],
     images: [
       {
-        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514123146137.png&nonce=1deeb779-e98e-434c-9359-c8790131a684&project_id=7639575009161199679&sign=307317a3a6270745e4a47d90b230efd36c6bbce018be82ca20ae86d55c04384e",
-        alt: "构建图文指令和视频指令示例",
-        caption: "构建图文指令和视频指令示例",
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514123533362.png&nonce=1a3b49bb-e0e6-4eac-9652-ad156b5bb0a9&project_id=7639575009161199679&sign=54debe2258b9162b0fa04f0c3d7bfaf3e7bdb119d490e183d5c73a88011f2736",
+        alt: "使用图文指令生成图片",
+        caption: "使用图文指令生成图片",
       },
     ],
   },
   {
     num: 3,
+    title: "生成图片示例",
+    description: "查看生成的图片效果",
+    content: "AI会根据图文指令生成高质量的图片，检查生成的图片是否符合预期。",
+    images: [
+      {
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514123712774.png&nonce=f5af3295-62af-4c41-8fbb-2f15c4537556&project_id=7639575009161199679&sign=4b12c96db21eb790c5e1a791f6b54ffd7d49e49709f4e5d51398823c12273965",
+        alt: "生成的图片示例",
+        caption: "生成的图片示例",
+      },
+    ],
+  },
+  {
+    num: 4,
     title: "预览图片并找到生成视频入口",
     description: "点开图片预览，找到生成视频按钮",
     content: "将生成后的图片点开预览，在左上角找到「生成视频」按钮。",
@@ -102,7 +115,7 @@ const steps: Array<{
     ],
   },
   {
-    num: 4,
+    num: 5,
     title: "输入视频指令",
     description: "根据人物、动作、环境构建视频指令",
     formula: "【人物】 + 【动作】 + 【环境】",
@@ -122,7 +135,7 @@ const steps: Array<{
     ],
   },
   {
-    num: 5,
+    num: 6,
     title: "指示词生成后调整去敏",
     description: "优化生成的视频内容",
     content:
