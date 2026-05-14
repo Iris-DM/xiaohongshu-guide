@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import {
   Video,
@@ -11,6 +12,9 @@ import {
   Activity,
   MapPin,
   Sparkles,
+  Copy,
+  Check,
+  ExternalLink,
 } from "lucide-react";
 
 interface ImageItem {
@@ -173,6 +177,72 @@ const steps: Array<{
 ];
 
 export default function VideoGuidePage() {
+  const [promptTopic, setPromptTopic] = useState("");
+  const [promptType, setPromptType] = useState<"image" | "video">("image");
+  const [isGeneratingPrompt, setIsGeneratingPrompt] = useState(false);
+  const [generatedPrompt, setGeneratedPrompt] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleCopy = async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  // 生成指令函数
+  const handleGeneratePrompt = async () => {
+    if (!promptTopic.trim()) return;
+
+    setIsGeneratingPrompt(true);
+    setGeneratedPrompt("");
+
+    try {
+      const response = await fetch("/api/generate-prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: promptTopic, type: promptType }),
+      });
+
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error("无法读取响应流");
+
+      const decoder = new TextDecoder();
+      let result = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6);
+            if (data === "[DONE]") continue;
+
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.content) {
+                result += parsed.content;
+                setGeneratedPrompt(result);
+              }
+              if (parsed.error) {
+                console.error("Error:", parsed.error);
+              }
+            } catch (e) {
+              // 忽略解析错误
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Generation error:", error);
+    } finally {
+      setIsGeneratingPrompt(false);
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* 页面标题区 */}
@@ -186,6 +256,129 @@ export default function VideoGuidePage() {
         <p className="text-sm text-muted-foreground max-w-2xl">
           用豆包AI生成视频的可跑指令，按以下步骤操作即可快速生成高质量视频内容
         </p>
+      </div>
+
+      {/* 在线生成指令 */}
+      <div className="mb-8 bg-card rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="bg-gradient-to-r from-primary/10 to-primary/5 px-6 py-5 border-b border-border/20">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">在线生成指令</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                输入主题，AI自动生成图片/视频生成指令
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6">
+          <div className="space-y-4">
+            {/* 输入区域 */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                输入主题
+              </label>
+              <textarea
+                value={promptTopic}
+                onChange={(e) => setPromptTopic(e.target.value)}
+                placeholder="例如：咖啡厅场景、产品展示、街拍穿搭..."
+                className="w-full px-4 py-3 bg-muted border-none rounded-lg text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none"
+                rows={3}
+              />
+            </div>
+
+            {/* 模式选择 */}
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">生成类型：</span>
+              <button
+                onClick={() => setPromptType("image")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  promptType === "image"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                图片指令
+              </button>
+              <button
+                onClick={() => setPromptType("video")}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  promptType === "video"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                视频指令
+              </button>
+            </div>
+
+            {/* 生成按钮 */}
+            <button
+              onClick={handleGeneratePrompt}
+              disabled={isGeneratingPrompt || !promptTopic.trim()}
+              className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isGeneratingPrompt ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  生成中...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  开始生成
+                </>
+              )}
+            </button>
+
+            {/* 生成结果 */}
+            {generatedPrompt && (
+              <div className="mt-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-medium text-foreground">生成结果</h3>
+                  <button
+                    onClick={() => handleCopy(generatedPrompt, "generated-prompt")}
+                    className="flex items-center gap-1 px-3 py-1.5 text-xs text-primary hover:bg-primary/10 rounded transition-colors"
+                  >
+                    {copiedId === "generated-prompt" ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        <span>已复制</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>复制</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <div className="bg-muted rounded-lg p-4 whitespace-pre-wrap text-sm text-foreground">
+                  {generatedPrompt}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 工具跳转链接 */}
+      <div className="mb-8 px-6 py-4 bg-muted/30 rounded-xl">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">快速访问：</span>
+          <a
+            href="https://www.doubao.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors"
+          >
+            豆包
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
       </div>
 
       {/* 步骤列表 */}
