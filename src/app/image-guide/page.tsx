@@ -75,6 +75,25 @@ export default function ImageGuidePage() {
 
 贴合小红书平台算法与热门流量逻辑，埋下SEO标签`;
 
+  const advancedTextPrompt = `Role:
+- 你是一个拥有2000w粉丝的social media influencer，作为小红书的爆款写作专家，你拥有消费心理学+市场营销双phd。
+- 你是小红书的重度用户，你拥有卓越的互联网网感。你的语气/写作风格非常的小红书化
+- 考虑到你只在中文互联网的语境下，你应当使用自然富有网感的中文。你的目标是为用户，遵循以下步骤进行创作小红书笔记。
+
+Background:
+- 我希望能够在小红书上发布一些文章，能够吸引大家的关注，拥有更多流量。但是我自己并不擅长小红书内容创作，你需要根据我给定的主题和我的需求，设计出爆款文案。
+
+Goals:
+- 产出5个具有吸引力的标题（含适当的emoji表情，标题字数限制在20以内）
+- 产出1篇正文（每个段落都含有适当的emoji表情，文末有合适的SEO标签，标签格式以#开头）
+
+Definition:
+- 爆炸词：带有强烈情感倾向且能引起用户共鸣的词语。
+- 表情符号：可以表示顺序、情绪或者单纯丰富文本内容的表情包或者符号，同一个表情符号不会在文章中多次出现。
+
+背景示例：
+集团美术馆项目计划于27年底落地，在美术馆落成之前会策划一系列活动为美术馆造势。本次活动用线上+线下的方式，以"纸箱"为载体，吸引创作者参与到艺术创作中。线上分为京东侧（AI影视圈）+小红书两个部分，双方共同发起线上话题"赛博纸箱"，吸引更多创意投稿。以纸箱为灵感元素，用AI视频的形式呈现多种想象；创作者可以用AI呈现创作思路或成品的制作过程，可以用AI生成纸箱潜艇、小镇、迷宫、戏台、艺术品，也可以用AI生成不同视觉差下的纸箱形态。`;
+
   const imagePromptFormula = "【场景】 + 【主体/人物】 + 【风格】 + 【光线】 + 【背景】 + 【细节补充】";
 
   const imagePromptExample = "场景：午后阳光明媚的咖啡馆窗边\n主体：一位年轻女性，气质优雅，穿着简约米色毛衣\n风格：韩系清新，自然柔美\n光线：侧光照射，面部轮廓柔和\n背景：窗外绿植若隐若现，虚化处理\n细节补充：手持咖啡杯，氛围温暖治愈，45度仰拍视角";
@@ -217,6 +236,59 @@ export default function ImageGuidePage() {
                   <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* 第二个 Prompt 指令模板 */}
+          <div className="p-6 border-t border-border/20">
+            <div className="flex items-center gap-2 mb-4">
+              <Terminal className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">进阶指令模板</span>
+              <span className="px-2 py-0.5 text-xs font-medium text-warning bg-warning/15 rounded-sm">
+                专业版
+              </span>
+            </div>
+
+            {/* 指令代码块 */}
+            <div className="bg-muted rounded-lg overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 bg-muted/80 border-b border-border/20">
+                <span className="text-xs font-medium text-muted-foreground">Prompt 指令</span>
+                <button
+                  onClick={() => handleCopy(advancedTextPrompt, "advanced-text-prompt")}
+                  className="flex items-center gap-1 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded transition-colors"
+                >
+                  {copiedId === "advanced-text-prompt" ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>已复制</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>复制</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="p-4 font-mono text-sm text-foreground leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto">
+                {advancedTextPrompt}
+              </div>
+            </div>
+
+            {/* 使用说明 */}
+            <div className="mt-5 bg-primary/5 rounded-lg p-4 border border-primary/20">
+              <div className="flex items-start gap-2">
+                <Lightbulb className="w-4 h-4 text-primary mt-0.5" />
+                <div className="text-xs text-muted-foreground">
+                  <p className="font-medium text-foreground mb-2">使用说明：</p>
+                  <ul className="space-y-1">
+                    <li>• 将上述指令完整复制到文心一言或 DeepSeek</li>
+                    <li>• 根据实际项目需求修改 Background 部分的背景信息</li>
+                    <li>• AI 会生成 5 个爆款标题 + 1 篇完整正文</li>
+                    <li>• 可多次生成，选择最满意的结果使用</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
