@@ -53,6 +53,26 @@ const steps: Array<{
   },
   {
     num: 2,
+    title: "生成视频指示词并且去敏",
+    description: "优化生成的视频内容",
+    content:
+      "AI生成视频后，检查视频内容，根据需要调整指示词，去除敏感或不合适的内容，确保视频符合平台规范。",
+    tips: [
+      "检查视频时长是否合适",
+      "确认动作流畅自然",
+      "去除可能的敏感元素",
+      "调整不符合预期的细节",
+    ],
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=300&fit=crop",
+        alt: "视频预览调整示意",
+        caption: "预览并调整视频效果",
+      },
+    ],
+  },
+  {
+    num: 3,
     title: "使用新的图文指令生成图片",
     description: "将构建好的图文指令输入AI生成图片",
     content:
@@ -76,7 +96,7 @@ const steps: Array<{
     ],
   },
   {
-    num: 3,
+    num: 4,
     title: "预览图片并找到生成视频入口",
     description: "点开图片预览，找到生成视频按钮",
     content: "将生成后的图片点开预览，在左上角找到「生成视频」按钮。",
@@ -107,7 +127,7 @@ const steps: Array<{
     ],
   },
   {
-    num: 4,
+    num: 5,
     title: "输入视频指令",
     description: "根据人物、动作、环境构建视频指令",
     formula: "【人物】 + 【动作】 + 【环境】",
@@ -123,26 +143,6 @@ const steps: Array<{
         src: "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?w=600&h=300&fit=crop",
         alt: "视频指令输入示意",
         caption: "在视频生成界面输入指令",
-      },
-    ],
-  },
-  {
-    num: 5,
-    title: "指示词生成后调整去敏",
-    description: "优化生成的视频内容",
-    content:
-      "AI生成视频后，检查视频内容，根据需要调整指示词，去除敏感或不合适的内容，确保视频符合平台规范。",
-    tips: [
-      "检查视频时长是否合适",
-      "确认动作流畅自然",
-      "去除可能的敏感元素",
-      "调整不符合预期的细节",
-    ],
-    images: [
-      {
-        src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=300&fit=crop",
-        alt: "视频预览调整示意",
-        caption: "预览并调整视频效果",
       },
     ],
   },
