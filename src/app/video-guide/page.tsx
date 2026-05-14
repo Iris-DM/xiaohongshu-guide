@@ -149,9 +149,9 @@ const steps: Array<{
     ],
     images: [
       {
-        src: "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?w=600&h=300&fit=crop",
-        alt: "视频指令输入示意",
-        caption: "在视频生成界面输入指令",
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2F%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE+2026-05-14+164410.png&nonce=1a781b02-4211-48e2-8525-5394896d310b&project_id=7639575009161199679&sign=2a938aa7c3f5eb8d074eb3d219c761912e5971f0efb06d6ef8025b751075dc7a",
+        alt: "步骤示意图举例：143期纸箱创作大赛",
+        caption: "",
       },
     ],
   },
