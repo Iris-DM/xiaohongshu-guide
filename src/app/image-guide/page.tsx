@@ -18,6 +18,7 @@ import {
   Lightbulb,
   Star,
   CheckCircle,
+  ExternalLink,
 } from "lucide-react";
 
 const tags = [
@@ -144,6 +145,31 @@ Definition:
                   智能生成贴合小红书平台的高质量文案
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* 工具跳转链接 */}
+          <div className="px-6 py-4 bg-muted/30 border-b border-border/20">
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">快速访问：</span>
+              <a
+                href="https://yiyan.baidu.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors"
+              >
+                文心一言
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="https://www.deepseek.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors"
+              >
+                DeepSeek
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
             </div>
           </div>
 
