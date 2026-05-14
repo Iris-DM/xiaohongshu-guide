@@ -94,7 +94,7 @@ const steps: Array<{
         showButton: true,
       },
       {
-        src: "https://images.unsplash.com/photo-1551288390-5e9e4a5d5c7a?w=400&h=200&fit=crop",
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514124131128.png&nonce=84e0c742-dea6-42b6-a231-c5240edc346d&project_id=7639575009161199679&sign=0f9dbce471cc81a0145db6187bf61deb3f60f68845f5723468f41920051d106d",
         alt: "图片预览界面",
         caption: "图片预览模式",
       },
