@@ -56,7 +56,7 @@ const steps: Array<{
     title: "使用新的图文指令生成图片",
     description: "将构建好的图文指令输入AI生成图片",
     content:
-      "将第1步构建好的完整图文指令复制到豆包AI的图片生成功能中，等待AI生成符合要求的图片。",
+      "将第1步构建好的完整图文指令复制到豆包AI的图片生成功能中再融合更详细的背景，图片等等，等待AI生成更符合要求的图片。",
     checklist: [
       "确保指令完整包含所有要素",
       "等待图片生成完成后查看效果",
@@ -64,14 +64,9 @@ const steps: Array<{
     ],
     images: [
       {
-        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514123533362.png&nonce=1a3b49bb-e0e6-4eac-9652-ad156b5bb0a9&project_id=7639575009161199679&sign=54debe2258b9162b0fa04f0c3d7bfaf3e7bdb119d490e183d5c73a88011f2736",
-        alt: "使用图文指令生成图片",
-        caption: "使用图文指令生成图片",
-      },
-      {
-        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514123712774.png&nonce=f5af3295-62af-4c41-8fbb-2f15c4537556&project_id=7639575009161199679&sign=4b12c96db21eb790c5e1a791f6b54ffd7d49e49709f4e5d51398823c12273965",
-        alt: "生成的图片示例",
-        caption: "生成的图片示例",
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514162038297.png&nonce=52aa704f-2204-49d8-a408-3717088e3f5d&project_id=7639575009161199679&sign=9958c9a9ebe7c78786b4f4689b54fa12c3ef0c3b2aa8a254b4fe59350c974954",
+        alt: "步骤示意图举例：143期纸箱创作大赛",
+        caption: "步骤示意图举例：143期纸箱创作大赛",
       },
     ],
   },
