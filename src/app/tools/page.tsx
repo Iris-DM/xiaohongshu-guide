@@ -107,6 +107,7 @@ export default function ToolsPage() {
   const [showSensitiveModal, setShowSensitiveModal] = useState(false);
   const [showXingtuModal, setShowXingtuModal] = useState(false);
   const [showImageSearchModal, setShowImageSearchModal] = useState(false);
+  const [showGaodingModal, setShowGaodingModal] = useState(false);
 
   // 图片搜索工具数据
   const imageSearchTools = [
@@ -150,6 +151,8 @@ export default function ToolsPage() {
       setShowXingtuModal(true);
     } else if (toolId === "image-search") {
       setShowImageSearchModal(true);
+    } else if (toolId === "gaoding") {
+      setShowGaodingModal(true);
     } else if (tool?.url) {
       window.open(tool.url, "_blank");
     }
@@ -434,6 +437,87 @@ export default function ToolsPage() {
               <p className="text-xs text-muted-foreground text-center">
                 💡 建议多个平台配合使用，找到更多优质素材
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 稿定设计使用指南模态框 */}
+      {showGaodingModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowGaodingModal(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-foreground">稿定设计使用指南</h2>
+              <p className="text-sm text-muted-foreground mt-1">多场景在线设计工具，小红书模板丰富</p>
+            </div>
+
+            <div className="mb-6">
+              <img
+                src="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514172417921.png&nonce=0a926c6a-c205-449c-b948-14178eea649b&project_id=7639575009161199679&sign=fa39a05f6b52303616201eb691b6973c245e9d85d236ac76b3585810dcdcfab9"
+                alt="稿定设计界面"
+                className="w-full h-auto rounded-xl border border-border object-contain"
+              />
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold text-foreground mb-2">主要功能</h3>
+                <ul className="text-sm text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>小红书封面模板：海量小红书专属模板，尺寸完美适配</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>一键套用：选择模板后可快速替换图片、文字，提高制作效率</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>多场景设计：支持海报、小红书封面、朋友圈配图等多种尺寸</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>团队协作：支持多人协作编辑，适合团队运营使用</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-foreground mb-2">使用技巧</h3>
+                <ul className="text-sm text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>搜索"小红书封面"可快速找到合适模板</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>保存常用模板，下次可快速复用</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>配合品牌色库，保持笔记视觉统一</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-border">
+              <a
+                href="https://www.gaoding.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
+              >
+                访问稿定设计官网
+                <ExternalLink className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </div>
