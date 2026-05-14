@@ -105,6 +105,7 @@ const tools = [
 export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [showSensitiveModal, setShowSensitiveModal] = useState(false);
+  const [showXingtuModal, setShowXingtuModal] = useState(false);
 
   const filteredTools = tools.filter((tool) => {
     return activeCategory === "all" || tool.category === activeCategory;
@@ -130,6 +131,8 @@ export default function ToolsPage() {
     
     if (toolId === "xhs-sensitive") {
       setShowSensitiveModal(true);
+    } else if (toolId === "xingtu") {
+      setShowXingtuModal(true);
     } else if (tool?.url) {
       window.open(tool.url, "_blank");
     }
@@ -245,6 +248,75 @@ export default function ToolsPage() {
               <p className="text-xs text-muted-foreground text-center">
                 建议使用多个工具交叉检测，确保内容安全
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 醒图使用指南弹窗 */}
+      {showXingtuModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowXingtuModal(false)}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-foreground">醒图使用指南</h2>
+              <p className="text-sm text-muted-foreground mt-1">专业的手机修图工具</p>
+            </div>
+
+            <div className="mb-6">
+              <img
+                src="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514170209344.png&nonce=50989ab6-bf0c-4d1a-8148-7310b3e20368&project_id=7639575009161199679&sign=c4fcb32d54996186e135a5279881a5f09a20abf3200f36e4620f53b3f4cf974e"
+                alt="醒图使用界面"
+                className="w-full h-auto rounded-xl"
+              />
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold text-foreground mb-2">主要功能</h3>
+                <ul className="text-sm text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>丰富的滤镜和特效：提供多种风格的滤镜，轻松打造不同氛围</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>智能美颜：自动识别人脸，提供自然的美颜效果</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>拼图功能：支持多种拼图模板，适合制作小红书封面</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>文字贴纸：丰富的文字样式和贴纸素材</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-foreground mb-2">使用技巧</h3>
+                <ul className="text-sm text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>先调整整体色调，再处理细节效果更好</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>使用局部调整功能，可以精准优化特定区域</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>保存常用的调色参数，提高修图效率</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
