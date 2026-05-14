@@ -38,6 +38,7 @@ const steps: Array<{
   problem?: { title: string; content: string };
   solution?: { title: string; content: string; steps: string[] };
   note?: string;
+  video?: string;
 }> = [
   {
     num: 1,
@@ -154,6 +155,7 @@ const steps: Array<{
         caption: "",
       },
     ],
+    video: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2F%E8%B5%9B%E5%8D%9A%E7%BA%B8%E7%AE%B1AI%E5%A4%A7%E8%B5%9B.mp4&nonce=ddb6f533-8d18-46d1-86c8-2ce69ce62ca1&project_id=7639575009161199679&sign=0c705f0f75429a755b71c92c8a412dd3cc23d1fcf80806cc299a70b2eec6f950",
   },
 ];
 
@@ -404,6 +406,26 @@ export default function VideoGuidePage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* 视频区域 */}
+            {step.video && (
+              <div className="border-t border-border/20 bg-muted/30 p-6">
+                <p className="text-xs font-medium text-muted-foreground mb-4 flex items-center gap-1">
+                  <Video className="w-3.5 h-3.5" />
+                  视频示例
+                </p>
+                <div className="max-w-2xl mx-auto">
+                  <video
+                    src={step.video}
+                    controls
+                    className="w-full rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+                    poster=""
+                  >
+                    您的浏览器不支持视频播放
+                  </video>
                 </div>
               </div>
             )}
