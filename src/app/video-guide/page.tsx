@@ -45,9 +45,9 @@ const steps: Array<{
     tips: "融合项目背景形成图文指令和视频指令，突出主题",
     images: [
       {
-        src: "https://coze-coding-project.tos.coze.site/coze_storage_7639575114387914815/image/generate_image_6c1e44a7-174f-422e-82be-cc6951ebd043.jpeg?sign=1810268739-e2951e064f-0-82354a064690ff438037cad2844e25f77ca3f852d755c00e962905344be1525c",
-        alt: "咖啡厅场景示例",
-        caption: "场景+主体+风格+光线+背景+细节示意",
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514123146137.png&nonce=1deeb779-e98e-434c-9359-c8790131a684&project_id=7639575009161199679&sign=307317a3a6270745e4a47d90b230efd36c6bbce018be82ca20ae86d55c04384e",
+        alt: "构建图文指令和视频指令示例",
+        caption: "构建图文指令和视频指令示例",
       },
     ],
   },
