@@ -58,6 +58,7 @@ const tools = [
     iconColor: "primary",
     tip: "适合人群：设计新手、追求效率的创作者",
     suitable: "设计新手",
+    url: "https://www.canva.cn/",
   },
   {
     id: "xingtu",
@@ -125,8 +126,12 @@ export default function ToolsPage() {
   };
 
   const handleGuideClick = (toolId: string) => {
+    const tool = tools.find(t => t.id === toolId);
+    
     if (toolId === "xhs-sensitive") {
       setShowSensitiveModal(true);
+    } else if (tool?.url) {
+      window.open(tool.url, "_blank");
     }
   };
 
