@@ -338,6 +338,22 @@ Definition:
             </div>
           </div>
 
+          {/* 工具跳转链接 */}
+          <div className="px-6 py-4 bg-muted/30 border-b border-border/20">
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">快速访问：</span>
+              <a
+                href="https://www.doubao.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-success bg-success/10 rounded-lg hover:bg-success/20 transition-colors"
+              >
+                豆包
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
           {/* 第一步 */}
           <div className="p-6 border-b border-border/20">
             <div className="flex items-center gap-3 mb-4">
