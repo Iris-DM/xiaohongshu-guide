@@ -108,6 +108,7 @@ export default function ToolsPage() {
   const [showXingtuModal, setShowXingtuModal] = useState(false);
   const [showImageSearchModal, setShowImageSearchModal] = useState(false);
   const [showGaodingModal, setShowGaodingModal] = useState(false);
+  const [showCanvaModal, setShowCanvaModal] = useState(false);
 
   // 图片搜索工具数据
   const imageSearchTools = [
@@ -153,6 +154,8 @@ export default function ToolsPage() {
       setShowImageSearchModal(true);
     } else if (toolId === "gaoding") {
       setShowGaodingModal(true);
+    } else if (toolId === "canva") {
+      setShowCanvaModal(true);
     } else if (tool?.url) {
       window.open(tool.url, "_blank");
     }
@@ -516,6 +519,87 @@ export default function ToolsPage() {
                 className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
               >
                 访问稿定设计官网
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Canva使用指南模态框 */}
+      {showCanvaModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowCanvaModal(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-foreground">Canva可画使用指南</h2>
+              <p className="text-sm text-muted-foreground mt-1">在线设计平台，海量模板一键套用</p>
+            </div>
+
+            <div className="mb-6">
+              <img
+                src="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514173158354.png&nonce=d9c5d6c1-e104-47ec-8ce2-48311b1c1e69&project_id=7639575009161199679&sign=88d8686ed4019833ffe7c3c4e7da850107717b41ba932af2b34fcc2d0cbc6394"
+                alt="Canva界面"
+                className="w-full h-auto rounded-xl border border-border object-contain"
+              />
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-semibold text-foreground mb-2">主要功能</h3>
+                <ul className="text-sm text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>海量设计模板：涵盖社交媒体、海报、名片等多种场景</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>拖拽式编辑：无需设计基础，轻松上手</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>素材丰富：提供图片、图标、字体等多种设计元素</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>团队协作：支持多人在线协作编辑</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-foreground mb-2">使用技巧</h3>
+                <ul className="text-sm text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>搜索"小红书封面"快速找到适配模板</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>使用品牌工具包保持设计风格统一</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>保存常用模板，提高创作效率</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-border">
+              <a
+                href="https://www.canva.cn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
+              >
+                访问Canva官网
                 <ExternalLink className="w-4 h-4" />
               </a>
             </div>
