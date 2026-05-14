@@ -131,7 +131,7 @@ const steps: Array<{
       {
         src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514164218264.png&nonce=7fe0a3e2-9f42-4c04-8d01-792b20d0fd52&project_id=7639575009161199679&sign=9b2245563d0f859bee08b097a708f2663f9a318f0d0c2305879990df79f65d02",
         alt: "版权限制问题示例",
-        caption: "遇到版权限制时的提示界面",
+        caption: "",
       },
     ],
   },
