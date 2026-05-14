@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/lucide/lucide-1.11.0.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/tailwindcss/tailwindcss-browser-4.2.4.min.js"></script>
+
+  <style type="text/tailwindcss">
+    @theme {
+      /* === 品牌色 === */
+      --color-primary:              #5B6CFF;
+      --color-primary-container:    #E8EBFF;
+      --color-on-primary:           #ffffff;
+      /* === 背景 / 表面 === */
+      --color-background:                 #F7F8FF;
+      --color-surface-container-lowest:   #FFFFFF;
+      --color-surface:                    #FFFFFF;
+      --color-surface-container:          #F0F1F8;
+      --color-surface-container-high:     #E8E9F0;
+      --color-surface-container-highest:  #FFFFFF;
+      /* === 文字 === */
+      --color-on-surface:           #1F2433;
+      --color-on-surface-variant:   #6B7280;
+      /* === 功能色 === */
+      --color-success:  #55C59D;
+      --color-error:    #ef4444;
+      --color-warning:  #FFD166;
+      /* === 边框 === */
+      --color-outline:          rgba(31,36,51,0.12);
+      --color-outline-variant:  rgba(31,36,51,0.08);
+      /* === 圆角 === */
+      --radius-sm:   0.375rem;
+      --radius-md:   0.5rem;
+      --radius-lg:   0.75rem;
+      --radius-xl:   1rem;
+      --radius-2xl:  1.5rem;
+      --radius-full: 9999px;
+      /* === 阴影 === */
+      --shadow-card:   0 2px 8px rgba(0,0,0,0.06);
+      --shadow-float:  0 10px 25px rgba(0,0,0,0.08);
+      --shadow-dialog: 0 25px 50px rgba(0,0,0,0.12);
+      /* === 字体 === */
+      --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
+    }
+  </style>
+
+  <!-- 图片兜底 -->
+  <script>
+    document.addEventListener('error', function (e) {
+      const img = e.target;
+      if (img.tagName !== 'IMG' || img.dataset.fallback) return;
+      img.dataset.fallback = '1';
+      const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const cat = img.getAttribute('data-category') || '其他';
+      const alt = img.getAttribute('alt') || '';
+      const label = esc(alt.length > 8 ? alt.slice(0, 8) + '…' : alt);
+      const icons = { '人物': '👤', '自然风景': '🏞', '动物': '🐾', '建筑城市': '🏙', '运动体育': '⚽', '交通工具': '🚗', '食物': '🍽', '服饰时尚': '👗', '商业科技': '💼', '游戏娱乐': '🎮', '艺术': '🎨', '其他': '🖼' };
+      const icon = icons[cat] || '🖼';
+      const w = img.width || 400, h = img.height || 300;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="45%" text-anchor="middle" font-size="${Math.min(w, h) * 0.18}" dominant-baseline="central">${icon}</text><text x="50%" y="68%" text-anchor="middle" font-size="${Math.min(w, h) * 0.07}" fill="%239ca3af" font-family="system-ui,sans-serif" dominant-baseline="central">${label}</text></svg>`;
+      img.src = 'data:image/svg+xml,' + svg;
+    }, true);
+  </script>
+</head>
+
+<body class="bg-background text-on-surface font-sans">
+
+  <!-- @nav:start 导航组件，不需要的页面则不要复制此段（从 @nav:start 到 @nav:end） -->
+  <header class="bg-surface sticky top-0 z-40 h-16 flex items-center px-6 border-b border-outline-variant/20">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="book-open" class="w-6 h-6 text-primary"></i>
+        <span class="font-bold text-lg text-on-surface">小红书创作指南</span>
+      </div>
+      
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="home.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-home">首页</a>
+        <a href="image-guide.html" class="px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg transition-colors" aria-current="page" id="nav-image">图文创作指南</a>
+        <a href="video-guide.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-video">视频创作指南</a>
+        <a href="tools.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-tools">创作工具大全</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button class="md:hidden p-2 hover:bg-surface-container rounded-lg transition-colors">
+          <i data-lucide="menu" class="w-5 h-5 text-on-surface-variant"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- @nav:end 导航组件，不需要的页面则不要复制此段 -->
+
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <!-- @main-content:start -->
+    
+    <!-- 页面标题和搜索区 -->
+    <div class="mb-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <h1 class="text-2xl font-bold text-on-surface">图文创作指南</h1>
+          <p class="text-sm text-on-surface-variant mt-1">掌握 AI 辅助创作技巧，高效产出优质图文内容</p>
+        </div>
+        
+        <!-- 搜索框 -->
+        <div class="relative w-full md:w-80">
+          <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant"></i>
+          <input type="text" id="search-input" placeholder="搜索创作技巧、指令模板..." 
+                 class="w-full bg-surface-container border-none rounded-lg pl-10 pr-4 py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors">
+        </div>
+      </div>
+      
+      <!-- 快捷标签 -->
+      <div class="flex flex-wrap gap-2">
+        <button id="tag-all" class="px-3 py-1.5 text-xs font-medium text-primary bg-primary/10 rounded-full hover:bg-primary/20 transition-colors">全部</button>
+        <button id="tag-text" class="px-3 py-1.5 text-xs font-medium text-on-surface-variant bg-surface-container rounded-full hover:bg-surface-container-high transition-colors">文案生成</button>
+        <button id="tag-image" class="px-3 py-1.5 text-xs font-medium text-on-surface-variant bg-surface-container rounded-full hover:bg-surface-container-high transition-colors">图片生成</button>
+        <button id="tag-prompt" class="px-3 py-1.5 text-xs font-medium text-on-surface-variant bg-surface-container rounded-full hover:bg-surface-container-high transition-colors">指令模板</button>
+      </div>
+    </div>
+
+    <!-- 模块一：文心一言/deepseek 辅助生成文案 -->
+    <section id="section-text" class="mb-12">
+      <div class="bg-surface rounded-xl shadow-card overflow-hidden">
+        <!-- 模块头部 -->
+        <div class="bg-gradient-to-r from-primary/10 to-primary/5 px-6 py-5 border-b border-outline-variant/20">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+              <i data-lucide="message-square" class="w-5 h-5 text-primary"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold text-on-surface">用文心一言 / DeepSeek 辅助生成文案和标题</h2>
+              <p class="text-xs text-on-surface-variant mt-0.5">智能生成贴合小红书平台的高质量文案</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 示意图区域 -->
+        <div class="p-6 border-b border-outline-variant/20">
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="image" class="w-4 h-4 text-on-surface-variant"></i>
+            <span class="text-sm font-medium text-on-surface">操作示意图</span>
+          </div>
+          <div class="bg-surface-container rounded-lg p-4 overflow-x-auto">
+            <img src="https://images.unsplash.com/photo-1516321318425-f8391932c8e4?w=800&h=400&fit=crop" 
+                 alt="AI文案生成界面示意图，展示输入需求和生成文案的过程" 
+                 data-category="商业科技"
+                 class="w-full h-48 object-cover rounded-lg">
+          </div>
+          <p class="text-xs text-on-surface-variant mt-3 flex items-center gap-1">
+            <i data-lucide="info" class="w-3.5 h-3.5"></i>
+            在文心一言或 DeepSeek 中输入指令，AI 会自动生成符合小红书风格的文案
+          </p>
+        </div>
+        
+        <!-- 通用指令内容 -->
+        <div class="p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <i data-lucide="terminal" class="w-4 h-4 text-primary"></i>
+            <span class="text-sm font-medium text-on-surface">通用指令模板</span>
+            <span class="px-2 py-0.5 text-xs font-medium text-success bg-success/15 rounded-sm">推荐</span>
+          </div>
+          
+          <!-- 指令代码块 -->
+          <div class="bg-surface-container rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 bg-surface-container-high border-b border-outline-variant/20">
+              <span class="text-xs font-medium text-on-surface-variant">Prompt 指令</span>
+              <button id="copy-btn-text" class="flex items-center gap-1 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded transition-colors">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>复制</span>
+              </button>
+            </div>
+            <div class="p-4 font-mono text-sm text-on-surface leading-relaxed">
+              <p class="text-on-surface-variant mb-2">提炼每期BF需求总结核心要点，梳理内容框架，延展笔记内容，分三段输出正文：</p>
+              <div class="space-y-1.5">
+                <p>1️⃣ <span class="text-primary font-medium">【噱头/思考点】</span> - 开篇吸引眼球，抛出问题或观点</p>
+                <p>2️⃣ <span class="text-primary font-medium">【核心价值】</span> - 干货内容，提供实用价值或解决方案</p>
+                <p>3️⃣ <span class="text-primary font-medium">【互动】</span> - 引导评论互动，增加笔记活跃度</p>
+              </div>
+              <p class="text-on-surface-variant mt-3">贴合小红书平台算法与热门流量逻辑，埋下SEO标签</p>
+            </div>
+          </div>
+          
+          <!-- 指令要点说明 -->
+          <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-surface-container-lowest rounded-lg p-4 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                  <span class="text-xs font-bold text-primary">1</span>
+                </div>
+                <span class="text-sm font-medium text-on-surface">提炼核心要点</span>
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">从 BF 需求中提取关键信息，明确内容主题和目标受众</p>
+            </div>
+            <div class="bg-surface-container-lowest rounded-lg p-4 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                  <span class="text-xs font-bold text-primary">2</span>
+                </div>
+                <span class="text-sm font-medium text-on-surface">三段式输出</span>
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">噱头吸引 + 核心价值 + 互动引导，结构清晰</p>
+            </div>
+            <div class="bg-surface-container-lowest rounded-lg p-4 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                  <span class="text-xs font-bold text-primary">3</span>
+                </div>
+                <span class="text-sm font-medium text-on-surface">SEO优化</span>
+              </div>
+              <p class="text-xs text-on-surface-variant leading-relaxed">贴合平台算法，埋入热门关键词和流量标签</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块二：豆包AI生成图片 -->
+    <section id="section-image" class="mb-12">
+      <div class="bg-surface rounded-xl shadow-card overflow-hidden">
+        <!-- 模块头部 -->
+        <div class="bg-gradient-to-r from-success/10 to-success/5 px-6 py-5 border-b border-outline-variant/20">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-success/20 flex items-center justify-center">
+              <i data-lucide="image-plus" class="w-5 h-5 text-success"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold text-on-surface">用豆包 AI 生成图片</h2>
+              <p class="text-xs text-on-surface-variant mt-0.5">两步生成高质量配图，提升笔记视觉吸引力</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 第一步 -->
+        <div class="p-6 border-b border-outline-variant/20">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-warning/20 flex items-center justify-center">
+              <span class="text-sm font-bold text-warning">1</span>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-on-surface">构建完整指令</h3>
+              <p class="text-xs text-on-surface-variant">融合多个维度形成高质量生成指令</p>
+            </div>
+          </div>
+          
+          <!-- 示意图 -->
+          <div class="bg-surface-container rounded-lg p-4 mb-5">
+            <img src="https://images.unsplash.com/photo-1547658711-da4353bf764d?w=800&h=400&fit=crop" 
+                 alt="AI图片生成指令构建示意图，展示各维度参数组合" 
+                 data-category="商业科技"
+                 class="w-full h-40 object-cover rounded-lg">
+          </div>
+          
+          <!-- 指令公式 -->
+          <div class="bg-surface-container rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 bg-surface-container-high border-b border-outline-variant/20">
+              <span class="text-xs font-medium text-on-surface-variant">指令公式</span>
+              <button id="copy-btn-formula" class="flex items-center gap-1 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded transition-colors">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>复制</span>
+              </button>
+            </div>
+            <div class="p-4">
+              <div class="flex flex-wrap items-center gap-2 text-sm">
+                <span class="px-3 py-1.5 bg-primary/15 text-primary rounded-lg font-medium">场景</span>
+                <i data-lucide="plus" class="w-4 h-4 text-on-surface-variant"></i>
+                <span class="px-3 py-1.5 bg-success/15 text-success rounded-lg font-medium">主体/人物</span>
+                <i data-lucide="plus" class="w-4 h-4 text-on-surface-variant"></i>
+                <span class="px-3 py-1.5 bg-warning/15 text-warning rounded-lg font-medium">风格</span>
+                <i data-lucide="plus" class="w-4 h-4 text-on-surface-variant"></i>
+                <span class="px-3 py-1.5 bg-error/15 text-error rounded-lg font-medium">光线</span>
+                <i data-lucide="plus" class="w-4 h-4 text-on-surface-variant"></i>
+                <span class="px-3 py-1.5 bg-primary/15 text-primary rounded-lg font-medium">背景</span>
+                <i data-lucide="plus" class="w-4 h-4 text-on-surface-variant"></i>
+                <span class="px-3 py-1.5 bg-success/15 text-success rounded-lg font-medium">细节补充</span>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-3">细节补充包括：质感 / 氛围 / 视角 / 文字等</p>
+            </div>
+          </div>
+          
+          <!-- 各维度说明 -->
+          <div class="mt-5 grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div class="bg-surface-container-lowest rounded-lg p-3 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="map-pin" class="w-4 h-4 text-primary"></i>
+                <span class="text-xs font-medium text-on-surface">场景</span>
+              </div>
+              <p class="text-xs text-on-surface-variant">室内/户外/特定环境</p>
+            </div>
+            <div class="bg-surface-container-lowest rounded-lg p-3 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="user" class="w-4 h-4 text-success"></i>
+                <span class="text-xs font-medium text-on-surface">主体/人物</span>
+              </div>
+              <p class="text-xs text-on-surface-variant">人物特征/产品/物品</p>
+            </div>
+            <div class="bg-surface-container-lowest rounded-lg p-3 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="palette" class="w-4 h-4 text-warning"></i>
+                <span class="text-xs font-medium text-on-surface">风格</span>
+              </div>
+              <p class="text-xs text-on-surface-variant">摄影/插画/3D/手绘</p>
+            </div>
+            <div class="bg-surface-container-lowest rounded-lg p-3 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="sun" class="w-4 h-4 text-error"></i>
+                <span class="text-xs font-medium text-on-surface">光线</span>
+              </div>
+              <p class="text-xs text-on-surface-variant">自然光/暖光/冷光/柔光</p>
+            </div>
+            <div class="bg-surface-container-lowest rounded-lg p-3 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="mountain" class="w-4 h-4 text-primary"></i>
+                <span class="text-xs font-medium text-on-surface">背景</span>
+              </div>
+              <p class="text-xs text-on-surface-variant">简洁/复杂/渐变/实景</p>
+            </div>
+            <div class="bg-surface-container-lowest rounded-lg p-3 border border-outline-variant/20">
+              <div class="flex items-center gap-2 mb-1">
+                <i data-lucide="sparkles" class="w-4 h-4 text-success"></i>
+                <span class="text-xs font-medium text-on-surface">细节补充</span>
+              </div>
+              <p class="text-xs text-on-surface-variant">质感/氛围/视角/文字</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 第二步 -->
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-success/20 flex items-center justify-center">
+              <span class="text-sm font-bold text-success">2</span>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-on-surface">使用完整指令生成图片</h3>
+              <p class="text-xs text-on-surface-variant">将组合后的指令输入豆包AI，生成高质量图片</p>
+            </div>
+          </div>
+          
+          <!-- 示意图 -->
+          <div class="bg-surface-container rounded-lg p-4 mb-5">
+            <img src="https://images.unsplash.com/photo-1686195513393-fc0d72ece0d6?w=800&h=400&fit=crop" 
+                 alt="AI图片生成结果示意图，展示生成的精美图片" 
+                 data-category="艺术"
+                 class="w-full h-40 object-cover rounded-lg">
+          </div>
+          
+          <!-- 完整指令示例 -->
+          <div class="bg-surface-container rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 bg-surface-container-high border-b border-outline-variant/20">
+              <span class="text-xs font-medium text-on-surface-variant">完整指令示例</span>
+              <button id="copy-btn-example" class="flex items-center gap-1 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded transition-colors">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                <span>复制</span>
+              </button>
+            </div>
+            <div class="p-4 font-mono text-sm text-on-surface leading-relaxed">
+              <p class="text-on-surface-variant">生成一张图片：</p>
+              <p class="mt-2"><span class="text-primary">场景</span>：温馨的咖啡厅角落</p>
+              <p><span class="text-success">主体</span>：一位穿着米色毛衣的年轻女性，手拿咖啡杯</p>
+              <p><span class="text-warning">风格</span>：日系清新摄影风格</p>
+              <p><span class="text-error">光线</span>：自然光透过落地窗，柔和温暖</p>
+              <p><span class="text-primary">背景</span>：简约北欧风装饰，绿植点缀</p>
+              <p><span class="text-success">细节</span>：浅景深虚化，胶片质感，俯视角度</p>
+            </div>
+          </div>
+          
+          <!-- 提示 -->
+          <div class="mt-4 flex items-start gap-2 p-3 bg-primary/5 rounded-lg">
+            <i data-lucide="lightbulb" class="w-4 h-4 text-primary shrink-0 mt-0.5"></i>
+            <p class="text-xs text-on-surface-variant leading-relaxed">
+              <span class="font-medium text-on-surface">提示：</span>
+              可根据实际项目需求调整各维度参数，多次迭代优化直到满意。建议先生成小图预览，确认方向后再生成高清大图。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 实战案例展示 -->
+    <section id="section-cases" class="mb-8">
+      <div class="flex items-center gap-2 mb-5">
+        <i data-lucide="folder-open" class="w-5 h-5 text-primary"></i>
+        <h2 class="text-lg font-semibold text-on-surface">实战案例参考</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- 案例1 -->
+        <div class="bg-surface rounded-lg shadow-card overflow-hidden group hover:shadow-float transition-shadow">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1495474523875-5a6b5c8e9e4f?w=400&h=300&fit=crop" 
+                 alt="美妆护肤笔记案例封面" 
+                 data-category="服饰时尚"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <div class="p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 text-xs font-medium text-primary bg-primary/10 rounded-sm">美妆护肤</span>
+            </div>
+            <h3 class="text-sm font-semibold text-on-surface mb-1">夏日清爽妆容教程</h3>
+            <p class="text-xs text-on-surface-variant">清新自然风格，突出产品质感</p>
+          </div>
+        </div>
+        
+        <!-- 案例2 -->
+        <div class="bg-surface rounded-lg shadow-card overflow-hidden group hover:shadow-float transition-shadow">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1513593772660-4dea127a7d0f?w=400&h=300&fit=crop" 
+                 alt="美食探店笔记案例封面" 
+                 data-category="食物"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <div class="p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 text-xs font-medium text-success bg-success/10 rounded-sm">美食探店</span>
+            </div>
+            <h3 class="text-sm font-semibold text-on-surface mb-1">隐藏咖啡馆探店指南</h3>
+            <p class="text-xs text-on-surface-variant">温暖氛围感，吸引打卡</p>
+          </div>
+        </div>
+        
+        <!-- 案例3 -->
+        <div class="bg-surface rounded-lg shadow-card overflow-hidden group hover:shadow-float transition-shadow">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1483985663790-550c87106c18?w=400&h=300&fit=crop" 
+                 alt="穿搭分享笔记案例封面" 
+                 data-category="服饰时尚"
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+          </div>
+          <div class="p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 text-xs font-medium text-warning bg-warning/10 rounded-sm">穿搭分享</span>
+            </div>
+            <h3 class="text-sm font-semibold text-on-surface mb-1">通勤穿搭灵感合集</h3>
+            <p class="text-xs text-on-surface-variant">简约高级感，职场必备</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- @main-content:end -->
+  </main>
+
+  <script>
+    $(function() {
+      lucide.createIcons();
+      
+      // 复制按钮功能 - 文案指令
+      $('#copy-btn-text').on('click', function() {
+        const text = '提炼每期BF需求总结核心要点，梳理内容框架，延展笔记内容，分三段输出正文：\n【噱头/思考点】+【核心价值】+【互动】，贴合小红书平台算法与热门流量逻辑，埋下SEO标签';
+        navigator.clipboard.writeText(text).then(function() {
+          alert('指令已复制到剪贴板！');
+        });
+      });
+      
+      // 复制按钮功能 - 指令公式
+      $('#copy-btn-formula').on('click', function() {
+        const text = '【场景】+【主体/人物】+【风格】+【光线】+【背景】+【细节补充（质感/氛围/视角/文字）】';
+        navigator.clipboard.writeText(text).then(function() {
+          alert('指令公式已复制到剪贴板！');
+        });
+      });
+      
+      // 复制按钮功能 - 完整示例
+      $('#copy-btn-example').on('click', function() {
+        const text = '生成一张图片：\n场景：温馨的咖啡厅角落\n主体：一位穿着米色毛衣的年轻女性，手拿咖啡杯\n风格：日系清新摄影风格\n光线：自然光透过落地窗，柔和温暖\n背景：简约北欧风装饰，绿植点缀\n细节：浅景深虚化，胶片质感，俯视角度';
+        navigator.clipboard.writeText(text).then(function() {
+          alert('完整指令已复制到剪贴板！');
+        });
+      });
+      
+      // 搜索功能 - 实时筛选内容
+      $('#search-input').on('input', function() {
+        const keyword = $(this).val().toLowerCase().trim();
+        
+        if (keyword === '') {
+          // 显示所有内容
+          $('#section-text, #section-image, #section-cases').show();
+          return;
+        }
+        
+        // 根据关键词显示/隐藏模块
+        const textContent = $('#section-text').text().toLowerCase();
+        const imageContent = $('#section-image').text().toLowerCase();
+        const casesContent = $('#section-cases').text().toLowerCase();
+        
+        if (textContent.includes(keyword)) {
+          $('#section-text').show();
+        } else {
+          $('#section-text').hide();
+        }
+        
+        if (imageContent.includes(keyword)) {
+          $('#section-image').show();
+        } else {
+          $('#section-image').hide();
+        }
+        
+        if (casesContent.includes(keyword)) {
+          $('#section-cases').show();
+        } else {
+          $('#section-cases').hide();
+        }
+      });
+      
+      // 标签筛选功能
+      $('#tag-all').on('click', function() {
+        $('#section-text, #section-image, #section-cases').show();
+        updateTagActive('tag-all');
+      });
+      
+      $('#tag-text').on('click', function() {
+        $('#section-text').show();
+        $('#section-image, #section-cases').hide();
+        updateTagActive('tag-text');
+      });
+      
+      $('#tag-image').on('click', function() {
+        $('#section-image').show();
+        $('#section-text, #section-cases').hide();
+        updateTagActive('tag-image');
+      });
+      
+      $('#tag-prompt').on('click', function() {
+        $('#section-text, #section-image').show();
+        $('#section-cases').hide();
+        updateTagActive('tag-prompt');
+      });
+      
+      // 更新标签激活状态
+      function updateTagActive(activeId) {
+        $('button[id^="tag-"]').each(function() {
+          if ($(this).attr('id') === activeId) {
+            $(this).removeClass('text-on-surface-variant bg-surface-container')
+                   .addClass('text-primary bg-primary/10');
+          } else {
+            $(this).removeClass('text-primary bg-primary/10')
+                   .addClass('text-on-surface-variant bg-surface-container');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

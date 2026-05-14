@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 字体（按需，系统字体时省略；只能用 Google 字体，CSS 地址前缀：https://lf-code-agent.coze.cn/obj/x-ai-cn/fonts/google） -->
+  <!-- <link href="https://lf-code-agent.coze.cn/obj/x-ai-cn/fonts/google/google-all-fonts.css" rel="stylesheet"/> -->
+
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/lucide/lucide-1.11.0.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/tailwindcss/tailwindcss-browser-4.2.4.min.js"></script>
+
+  <style type="text/tailwindcss">
+    @theme {
+      /* === 品牌色 === */
+      --color-primary:              #5B6CFF;
+      --color-primary-container:    #E8EBFF;
+      --color-on-primary:           #ffffff;
+      /* === 背景 / 表面 === */
+      --color-background:                 #F7F8FF;
+      --color-surface-container-lowest:   #FFFFFF;
+      --color-surface:                    #FFFFFF;
+      --color-surface-container:          #F0F1F8;
+      --color-surface-container-high:     #E8E9F0;
+      --color-surface-container-highest:  #FFFFFF;
+      /* === 文字 === */
+      --color-on-surface:           #1F2433;
+      --color-on-surface-variant:   #6B7280;
+      /* === 功能色 === */
+      --color-success:  #55C59D;
+      --color-error:    #ef4444;
+      --color-warning:  #FFD166;
+      /* === 边框 === */
+      --color-outline:          rgba(31,36,51,0.12);
+      --color-outline-variant:  rgba(31,36,51,0.08);
+      /* === 圆角 === */
+      --radius-sm:   0.375rem;
+      --radius-md:   0.5rem;
+      --radius-lg:   0.75rem;
+      --radius-xl:   1rem;
+      --radius-2xl:  1.5rem;
+      --radius-full: 9999px;
+      /* === 阴影 === */
+      --shadow-card:   0 2px 8px rgba(0,0,0,0.06);
+      --shadow-float:  0 10px 25px rgba(0,0,0,0.08);
+      --shadow-dialog: 0 25px 50px rgba(0,0,0,0.12);
+      /* === 字体 === */
+      --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
+    }
+  </style>
+
+  <!-- 图片兜底 -->
+  <script>
+    document.addEventListener('error', function (e) {
+      const img = e.target;
+      if (img.tagName !== 'IMG' || img.dataset.fallback) return;
+      img.dataset.fallback = '1';
+      const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const cat = img.getAttribute('data-category') || '其他';
+      const alt = img.getAttribute('alt') || '';
+      const label = esc(alt.length > 8 ? alt.slice(0, 8) + '…' : alt);
+      const icons = { '人物': '👤', '自然风景': '🏞', '动物': '🐾', '建筑城市': '🏙', '运动体育': '⚽', '交通工具': '🚗', '食物': '🍽', '服饰时尚': '👗', '商业科技': '💼', '游戏娱乐': '🎮', '艺术': '🎨', '其他': '🖼' };
+      const icon = icons[cat] || '🖼';
+      const w = img.width || 400, h = img.height || 300;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="45%" text-anchor="middle" font-size="${Math.min(w, h) * 0.18}" dominant-baseline="central">${icon}</text><text x="50%" y="68%" text-anchor="middle" font-size="${Math.min(w, h) * 0.07}" fill="%239ca3af" font-family="system-ui,sans-serif" dominant-baseline="central">${label}</text></svg>`;
+      img.src = 'data:image/svg+xml,' + svg;
+    }, true);
+  </script>
+</head>
+
+<body class="bg-background text-on-surface font-sans">
+
+  <!-- @nav:start 导航组件，不需要的页面则不要复制此段（从 @nav:start 到 @nav:end） -->
+  <header class="bg-surface sticky top-0 z-40 h-16 flex items-center px-6 border-b border-outline-variant/20">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="book-open" class="w-6 h-6 text-primary"></i>
+        <span class="font-bold text-lg text-on-surface">小红书创作指南</span>
+      </div>
+      
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="home.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-home">首页</a>
+        <a href="image-guide.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-image">图文创作指南</a>
+        <a href="video-guide.html" class="px-4 py-2 text-sm font-medium text-on-surface bg-primary/10 rounded-lg transition-colors" aria-current="page" id="nav-video">视频创作指南</a>
+        <a href="tools.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-tools">创作工具大全</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button class="md:hidden p-2 hover:bg-surface-container rounded-lg transition-colors">
+          <i data-lucide="menu" class="w-5 h-5 text-on-surface-variant"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- @nav:end 导航组件，不需要的页面则不要复制此段 -->
+
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <!-- @main-content:start -->
+    
+    <!-- 页面标题区 -->
+    <div class="mb-8">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+          <i data-lucide="video" class="w-5 h-5 text-primary"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-on-surface">视频创作指南</h1>
+      </div>
+      <p class="text-sm text-on-surface-variant max-w-2xl">
+        用豆包AI生成视频的可跑指令，按以下步骤操作即可快速生成高质量视频内容
+      </p>
+    </div>
+
+    <!-- 搜索框 -->
+    <div class="mb-8">
+      <div class="relative max-w-xl">
+        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant"></i>
+        <input 
+          type="text" 
+          id="search-input"
+          placeholder="搜索步骤或指令内容..."
+          class="w-full bg-surface-container border-none rounded-xl pl-12 pr-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+        />
+      </div>
+    </div>
+
+    <!-- 步骤列表 -->
+    <div class="space-y-6">
+      
+      <!-- 步骤1 -->
+      <div class="bg-surface rounded-2xl shadow-card overflow-hidden" id="step-1">
+        <div class="flex items-start gap-6 p-6">
+          <!-- 步骤编号 -->
+          <div class="flex-shrink-0">
+            <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-float">
+              <span class="text-2xl font-bold text-on-primary">1</span>
+            </div>
+          </div>
+          
+          <!-- 步骤内容 -->
+          <div class="flex-1 min-w-0">
+            <h2 class="text-lg font-semibold text-on-surface mb-3">构建图文指令和视频指令</h2>
+            
+            <div class="bg-surface-container rounded-xl p-4 mb-4">
+              <p class="text-sm text-on-surface-variant mb-3">指令公式：</p>
+              <div class="bg-surface rounded-lg p-4 border border-outline-variant/20">
+                <p class="text-sm font-medium text-on-surface leading-relaxed">
+                  <span class="text-primary">【场景】</span> + 
+                  <span class="text-primary">【主体/人物】</span> + 
+                  <span class="text-primary">【风格】</span> + 
+                  <span class="text-primary">【光线】</span> + 
+                  <span class="text-primary">【背景】</span> + 
+                  <span class="text-primary">【细节补充（质感/氛围/视角/文字）】</span>
+                </p>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-3">
+                <i data-lucide="lightbulb" class="w-3.5 h-3.5 inline mr-1"></i>
+                融合项目背景形成图文指令和视频指令，突出主题
+              </p>
+            </div>
+
+            <!-- 示例指令 -->
+            <div class="bg-primary/5 rounded-xl p-4 border border-primary/20">
+              <p class="text-xs font-medium text-primary mb-2">📝 示例指令</p>
+              <p class="text-sm text-on-surface leading-relaxed">
+                室内咖啡厅场景，一位穿着米色针织衫的年轻女性坐在窗边，日系清新风格，
+                柔和自然光从窗户洒入，背景是模糊的绿植和木质装饰，
+                细腻的肤质，温暖舒适的氛围，45度侧面视角
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 示意图区域 -->
+        <div class="border-t border-outline-variant/20 bg-surface-container-lowest p-6">
+          <p class="text-xs font-medium text-on-surface-variant mb-4">
+            <i data-lucide="image" class="w-3.5 h-3.5 inline mr-1"></i>
+            步骤示意图
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-surface rounded-xl overflow-hidden shadow-card">
+              <img 
+                src="https://images.unsplash.com/photo-1501337848302-500ae6b3635a?w=600&h=300&fit=crop" 
+                alt="咖啡厅场景示例" 
+                data-category="建筑城市"
+                class="w-full h-40 object-cover"
+              />
+              <div class="p-3">
+                <p class="text-xs text-on-surface-variant">场景+主体+风格示意</p>
+              </div>
+            </div>
+            <div class="bg-surface rounded-xl overflow-hidden shadow-card">
+              <img 
+                src="https://images.unsplash.com/photo-1495474789200-6ad8b50b9a23?w=600&h=300&fit=crop" 
+                alt="光线与氛围示例" 
+                data-category="自然风景"
+                class="w-full h-40 object-cover"
+              />
+              <div class="p-3">
+                <p class="text-xs text-on-surface-variant">光线+背景+氛围示意</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步骤2 -->
+      <div class="bg-surface rounded-2xl shadow-card overflow-hidden" id="step-2">
+        <div class="flex items-start gap-6 p-6">
+          <!-- 步骤编号 -->
+          <div class="flex-shrink-0">
+            <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-float">
+              <span class="text-2xl font-bold text-on-primary">2</span>
+            </div>
+          </div>
+          
+          <!-- 步骤内容 -->
+          <div class="flex-1 min-w-0">
+            <h2 class="text-lg font-semibold text-on-surface mb-3">使用新的图文指令生成图片</h2>
+            
+            <div class="bg-surface-container rounded-xl p-4 mb-4">
+              <p class="text-sm text-on-surface-variant leading-relaxed">
+                将第1步构建好的完整图文指令复制到豆包AI的图片生成功能中，等待AI生成符合要求的图片。
+              </p>
+            </div>
+
+            <!-- 操作提示 -->
+            <div class="flex items-start gap-3 bg-success/10 rounded-xl p-4">
+              <i data-lucide="check-circle" class="w-5 h-5 text-success flex-shrink-0 mt-0.5"></i>
+              <div>
+                <p class="text-sm font-medium text-on-surface mb-1">操作要点</p>
+                <ul class="text-xs text-on-surface-variant space-y-1">
+                  <li>• 确保指令完整包含所有要素</li>
+                  <li>• 等待图片生成完成后查看效果</li>
+                  <li>• 如不满意可调整指令重新生成</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 示意图区域 -->
+        <div class="border-t border-outline-variant/20 bg-surface-container-lowest p-6">
+          <p class="text-xs font-medium text-on-surface-variant mb-4">
+            <i data-lucide="image" class="w-3.5 h-3.5 inline mr-1"></i>
+            步骤示意图
+          </p>
+          <div class="bg-surface rounded-xl overflow-hidden shadow-card max-w-md">
+            <img 
+              src="https://images.unsplash.com/photo-1542038784-d68edb39f66f?w=600&h=350&fit=crop" 
+              alt="AI生成图片界面示意" 
+              data-category="商业科技"
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-4">
+              <p class="text-xs text-on-surface-variant">将指令输入AI工具生成图片</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步骤3 -->
+      <div class="bg-surface rounded-2xl shadow-card overflow-hidden" id="step-3">
+        <div class="flex items-start gap-6 p-6">
+          <!-- 步骤编号 -->
+          <div class="flex-shrink-0">
+            <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-float">
+              <span class="text-2xl font-bold text-on-primary">3</span>
+            </div>
+          </div>
+          
+          <!-- 步骤内容 -->
+          <div class="flex-1 min-w-0">
+            <h2 class="text-lg font-semibold text-on-surface mb-3">预览图片并找到生成视频入口</h2>
+            
+            <div class="bg-surface-container rounded-xl p-4 mb-4">
+              <p class="text-sm text-on-surface-variant leading-relaxed mb-3">
+                将生成后的图片点开预览，在左上角找到「生成视频」按钮。
+              </p>
+              <div class="bg-warning/10 rounded-lg p-3 flex items-start gap-2">
+                <i data-lucide="alert-circle" class="w-4 h-4 text-warning flex-shrink-0 mt-0.5"></i>
+                <p class="text-xs text-on-surface-variant">
+                  注意：必须先点开图片预览，才能在左上角看到「生成视频」选项
+                </p>
+              </div>
+            </div>
+
+            <!-- 操作步骤 -->
+            <div class="space-y-2">
+              <div class="flex items-center gap-3 bg-surface-container rounded-lg p-3">
+                <div class="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                  <span class="text-xs font-medium text-primary">1</span>
+                </div>
+                <p class="text-sm text-on-surface">点击生成的图片进入预览模式</p>
+              </div>
+              <div class="flex items-center gap-3 bg-surface-container rounded-lg p-3">
+                <div class="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                  <span class="text-xs font-medium text-primary">2</span>
+                </div>
+                <p class="text-sm text-on-surface">在左上角找到「生成视频」按钮</p>
+              </div>
+              <div class="flex items-center gap-3 bg-surface-container rounded-lg p-3">
+                <div class="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                  <span class="text-xs font-medium text-primary">3</span>
+                </div>
+                <p class="text-sm text-on-surface">点击进入视频生成界面</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 示意图区域 -->
+        <div class="border-t border-outline-variant/20 bg-surface-container-lowest p-6">
+          <p class="text-xs font-medium text-on-surface-variant mb-4">
+            <i data-lucide="image" class="w-3.5 h-3.5 inline mr-1"></i>
+            步骤示意图
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-surface rounded-xl overflow-hidden shadow-card">
+              <div class="h-32 bg-surface-container flex items-center justify-center relative">
+                <i data-lucide="image" class="w-12 h-12 text-on-surface-variant/30"></i>
+                <div class="absolute top-2 left-2 bg-primary text-on-primary text-xs px-2 py-1 rounded">
+                  生成视频
+                </div>
+              </div>
+              <div class="p-3">
+                <p class="text-xs text-on-surface-variant">左上角「生成视频」按钮位置</p>
+              </div>
+            </div>
+            <div class="bg-surface rounded-xl overflow-hidden shadow-card">
+              <img 
+                src="https://images.unsplash.com/photo-1551288390-5e9e4a5d5c7a?w=400&h=200&fit=crop" 
+                alt="图片预览界面" 
+                data-category="商业科技"
+                class="w-full h-32 object-cover"
+              />
+              <div class="p-3">
+                <p class="text-xs text-on-surface-variant">图片预览模式</p>
+              </div>
+            </div>
+            <div class="bg-surface rounded-xl overflow-hidden shadow-card">
+              <div class="h-32 bg-surface-container flex items-center justify-center">
+                <i data-lucide="mouse-pointer-click" class="w-10 h-10 text-on-surface-variant/30"></i>
+              </div>
+              <div class="p-3">
+                <p class="text-xs text-on-surface-variant">点击进入视频生成</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步骤4 -->
+      <div class="bg-surface rounded-2xl shadow-card overflow-hidden" id="step-4">
+        <div class="flex items-start gap-6 p-6">
+          <!-- 步骤编号 -->
+          <div class="flex-shrink-0">
+            <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-float">
+              <span class="text-2xl font-bold text-on-primary">4</span>
+            </div>
+          </div>
+          
+          <!-- 步骤内容 -->
+          <div class="flex-1 min-w-0">
+            <h2 class="text-lg font-semibold text-on-surface mb-3">输入视频指令</h2>
+            
+            <div class="bg-surface-container rounded-xl p-4 mb-4">
+              <p class="text-sm text-on-surface-variant mb-3">视频指令要素：</p>
+              <div class="bg-surface rounded-lg p-4 border border-outline-variant/20">
+                <p class="text-sm font-medium text-on-surface leading-relaxed">
+                  <span class="text-primary">【人物】</span> + 
+                  <span class="text-primary">【动作】</span> + 
+                  <span class="text-primary">【环境】</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- 示例指令 -->
+            <div class="bg-primary/5 rounded-xl p-4 border border-primary/20 mb-4">
+              <p class="text-xs font-medium text-primary mb-2">📝 视频指令示例</p>
+              <p class="text-sm text-on-surface leading-relaxed">
+                年轻女性轻轻端起咖啡杯，眼神温柔地看向窗外，手指在杯沿轻轻划过，
+                身后的绿植在微风中轻轻摇曳，阳光在桌面上缓缓移动
+              </p>
+            </div>
+
+            <!-- 要素说明 -->
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-surface-container rounded-lg p-3 text-center">
+                <i data-lucide="user" class="w-5 h-5 text-primary mx-auto mb-2"></i>
+                <p class="text-xs font-medium text-on-surface">人物</p>
+                <p class="text-xs text-on-surface-variant mt-1">主体角色描述</p>
+              </div>
+              <div class="bg-surface-container rounded-lg p-3 text-center">
+                <i data-lucide="activity" class="w-5 h-5 text-primary mx-auto mb-2"></i>
+                <p class="text-xs font-medium text-on-surface">动作</p>
+                <p class="text-xs text-on-surface-variant mt-1">行为与动态</p>
+              </div>
+              <div class="bg-surface-container rounded-lg p-3 text-center">
+                <i data-lucide="trees" class="w-5 h-5 text-primary mx-auto mb-2"></i>
+                <p class="text-xs font-medium text-on-surface">环境</p>
+                <p class="text-xs text-on-surface-variant mt-1">场景动态元素</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 示意图区域 -->
+        <div class="border-t border-outline-variant/20 bg-surface-container-lowest p-6">
+          <p class="text-xs font-medium text-on-surface-variant mb-4">
+            <i data-lucide="image" class="w-3.5 h-3.5 inline mr-1"></i>
+            步骤示意图
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-surface rounded-xl overflow-hidden shadow-card">
+              <img 
+                src="https://images.unsplash.com/photo-1495474789200-6ad8b50b9a23?w=600&h=300&fit=crop" 
+                alt="人物动作示例" 
+                data-category="人物"
+                class="w-full h-40 object-cover"
+              />
+              <div class="p-3">
+                <p class="text-xs text-on-surface-variant">人物+动作示意</p>
+              </div>
+            </div>
+            <div class="bg-surface rounded-xl overflow-hidden shadow-card">
+              <img 
+                src="https://images.unsplash.com/photo-1507003214052-b0b5d1c3e1c5?w=600&h=300&fit=crop" 
+                alt="环境动态示例" 
+                data-category="自然风景"
+                class="w-full h-40 object-cover"
+              />
+              <div class="p-3">
+                <p class="text-xs text-on-surface-variant">环境动态示意</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 步骤5 -->
+      <div class="bg-surface rounded-2xl shadow-card overflow-hidden" id="step-5">
+        <div class="flex items-start gap-6 p-6">
+          <!-- 步骤编号 -->
+          <div class="flex-shrink-0">
+            <div class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-float">
+              <span class="text-2xl font-bold text-on-primary">5</span>
+            </div>
+          </div>
+          
+          <!-- 步骤内容 -->
+          <div class="flex-1 min-w-0">
+            <h2 class="text-lg font-semibold text-on-surface mb-3">指示词生成后调整去敏</h2>
+            
+            <div class="bg-surface-container rounded-xl p-4 mb-4">
+              <p class="text-sm text-on-surface-variant leading-relaxed">
+                视频生成完成后，根据实际效果对指示词进行优化调整，去除敏感内容或不合适的元素，确保最终视频符合平台发布要求。
+              </p>
+            </div>
+
+            <!-- 调整要点 -->
+            <div class="space-y-3">
+              <div class="flex items-start gap-3 bg-surface-container rounded-lg p-4">
+                <i data-lucide="sliders" class="w-5 h-5 text-primary flex-shrink-0 mt-0.5"></i>
+                <div>
+                  <p class="text-sm font-medium text-on-surface mb-1">效果调整</p>
+                  <p class="text-xs text-on-surface-variant">根据生成效果微调动作幅度、光线强度、镜头角度等参数</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 bg-surface-container rounded-lg p-4">
+                <i data-lucide="shield-check" class="w-5 h-5 text-success flex-shrink-0 mt-0.5"></i>
+                <div>
+                  <p class="text-sm font-medium text-on-surface mb-1">去敏处理</p>
+                  <p class="text-xs text-on-surface-variant">移除敏感词汇、替换不当内容、确保符合社区规范</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 bg-surface-container rounded-lg p-4">
+                <i data-lucide="refresh-cw" class="w-5 h-5 text-warning flex-shrink-0 mt-0.5"></i>
+                <div>
+                  <p class="text-sm font-medium text-on-surface mb-1">迭代优化</p>
+                  <p class="text-xs text-on-surface-variant">反复调整直到满意，保存最终版本</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 示意图区域 -->
+        <div class="border-t border-outline-variant/20 bg-surface-container-lowest p-6">
+          <p class="text-xs font-medium text-on-surface-variant mb-4">
+            <i data-lucide="image" class="w-3.5 h-3.5 inline mr-1"></i>
+            步骤示意图
+          </p>
+          <div class="bg-surface rounded-xl overflow-hidden shadow-card max-w-md">
+            <img 
+              src="https://images.unsplash.com/photo-1574717029653-3a1a1a1a1a1a?w=600&h=350&fit=crop" 
+              alt="视频调整界面" 
+              data-category="商业科技"
+              class="w-full h-48 object-cover"
+            />
+            <div class="p-4">
+              <p class="text-xs text-on-surface-variant">视频效果调整与去敏处理界面</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 底部提示 -->
+    <div class="mt-8 bg-primary/5 rounded-2xl p-6 border border-primary/10">
+      <div class="flex items-start gap-4">
+        <div class="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center flex-shrink-0">
+          <i data-lucide="sparkles" class="w-5 h-5 text-primary"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-semibold text-on-surface mb-2">创作小贴士</h3>
+          <ul class="text-sm text-on-surface-variant space-y-2">
+            <li class="flex items-start gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-success mt-0.5 flex-shrink-0"></i>
+              <span>指令越具体，生成效果越符合预期</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-success mt-0.5 flex-shrink-0"></i>
+              <span>多尝试不同风格和视角，找到最适合的表达方式</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <i data-lucide="check" class="w-4 h-4 text-success mt-0.5 flex-shrink-0"></i>
+              <span>保存好每次的指令模板，方便后续复用</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- @main-content:end -->
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    $(function() {
+      // 搜索功能 - 简单实现高亮匹配步骤
+      $('#search-input').on('input', function() {
+        const keyword = $(this).val().toLowerCase().trim();
+        
+        if (keyword === '') {
+          // 清空搜索时恢复所有步骤显示
+          $('[id^="step-"]').each(function() {
+            $(this).removeClass('ring-2 ring-primary');
+          });
+          return;
+        }
+        
+        // 遍历步骤，匹配关键词高亮
+        $('[id^="step-"]').each(function() {
+          const text = $(this).text().toLowerCase();
+          if (text.includes(keyword)) {
+            $(this).addClass('ring-2 ring-primary');
+          } else {
+            $(this).removeClass('ring-2 ring-primary');
+          }
+        });
+      });
+      
+      // 清空搜索框时恢复
+      $('#search-input').on('keydown', function(e) {
+        if (e.key === 'Escape') {
+          $(this).val('');
+          $('[id^="step-"]').removeClass('ring-2 ring-primary');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

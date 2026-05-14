@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/lucide/lucide-1.11.0.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/tailwindcss/tailwindcss-browser-4.2.4.min.js"></script>
+
+  <style type="text/tailwindcss">
+    @theme {
+      /* === 品牌色 === */
+      --color-primary:              #5B6CFF;
+      --color-primary-container:    #E8EBFF;
+      --color-on-primary:           #ffffff;
+      /* === 背景 / 表面 === */
+      --color-background:                 #F7F8FF;
+      --color-surface-container-lowest:   #FFFFFF;
+      --color-surface:                    #FFFFFF;
+      --color-surface-container:          #F0F1F8;
+      --color-surface-container-high:     #E8E9F0;
+      --color-surface-container-highest:  #FFFFFF;
+      /* === 文字 === */
+      --color-on-surface:           #1F2433;
+      --color-on-surface-variant:   #6B7280;
+      /* === 功能色 === */
+      --color-success:  #55C59D;
+      --color-error:    #ef4444;
+      --color-warning:  #FFD166;
+      /* === 边框 === */
+      --color-outline:          rgba(31,36,51,0.12);
+      --color-outline-variant:  rgba(31,36,51,0.08);
+      /* === 圆角 === */
+      --radius-sm:   0.375rem;
+      --radius-md:   0.5rem;
+      --radius-lg:   0.75rem;
+      --radius-xl:   1rem;
+      --radius-2xl:  1.5rem;
+      --radius-full: 9999px;
+      /* === 阴影 === */
+      --shadow-card:   0 2px 8px rgba(0,0,0,0.06);
+      --shadow-float:  0 10px 25px rgba(0,0,0,0.08);
+      --shadow-dialog: 0 25px 50px rgba(0,0,0,0.12);
+      /* === 字体 === */
+      --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
+    }
+  </style>
+
+  <!-- 图片兜底 -->
+  <script>
+    document.addEventListener('error', function (e) {
+      const img = e.target;
+      if (img.tagName !== 'IMG' || img.dataset.fallback) return;
+      img.dataset.fallback = '1';
+      const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const cat = img.getAttribute('data-category') || '其他';
+      const alt = img.getAttribute('alt') || '';
+      const label = esc(alt.length > 8 ? alt.slice(0, 8) + '…' : alt);
+      const icons = { '人物': '👤', '自然风景': '🏞', '动物': '🐾', '建筑城市': '🏙', '运动体育': '⚽', '交通工具': '🚗', '食物': '🍽', '服饰时尚': '👗', '商业科技': '💼', '游戏娱乐': '🎮', '艺术': '🎨', '其他': '🖼' };
+      const icon = icons[cat] || '🖼';
+      const w = img.width || 400, h = img.height || 300;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="45%" text-anchor="middle" font-size="${Math.min(w, h) * 0.18}" dominant-baseline="central">${icon}</text><text x="50%" y="68%" text-anchor="middle" font-size="${Math.min(w, h) * 0.07}" fill="%239ca3af" font-family="system-ui,sans-serif" dominant-baseline="central">${label}</text></svg>`;
+      img.src = 'data:image/svg+xml,' + svg;
+    }, true);
+  </script>
+</head>
+
+<body class="bg-background text-on-surface font-sans">
+
+  <!-- @nav:start 导航组件 -->
+  <header class="bg-surface sticky top-0 z-40 h-16 flex items-center px-6 border-b border-outline-variant/20">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <i data-lucide="book-open" class="w-6 h-6 text-primary"></i>
+        <span class="font-bold text-lg text-on-surface">小红书创作指南</span>
+      </div>
+      
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="home.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-home">首页</a>
+        <a href="image-guide.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-image">图文创作指南</a>
+        <a href="video-guide.html" class="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="nav-video">视频创作指南</a>
+        <a href="tools.html" class="px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg transition-colors" id="nav-tools" aria-current="page">创作工具大全</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button class="md:hidden p-2 hover:bg-surface-container rounded-lg transition-colors">
+          <i data-lucide="menu" class="w-5 h-5 text-on-surface-variant"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- @nav:end 导航组件 -->
+
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <!-- @main-content:start -->
+    
+    <!-- 页面标题 -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-on-surface">创作工具大全</h1>
+      <p class="text-sm text-on-surface-variant mt-2">精选实用工具，助力高效创作</p>
+    </div>
+
+    <!-- 搜索框 -->
+    <div class="mb-8">
+      <div class="relative max-w-md">
+        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant"></i>
+        <input 
+          type="text" 
+          id="search-input"
+          placeholder="搜索工具..."
+          class="w-full bg-surface-container border-none rounded-lg pl-10 pr-4 py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+        />
+      </div>
+    </div>
+
+    <!-- 工具分类标签 -->
+    <div class="flex items-center gap-2 mb-6">
+      <button id="filter-all" class="px-3 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-lg transition-colors">全部</button>
+      <button id="filter-content" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors">内容创作</button>
+      <button id="filter-design" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors">设计工具</button>
+      <button id="filter-video" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors">视频工具</button>
+    </div>
+
+    <!-- 工具卡片列表 -->
+    <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      
+      <!-- 卡片1: 小红书违禁词查询工具 -->
+      <div class="tool-card bg-surface rounded-xl shadow-card p-5 hover:shadow-float transition-all cursor-pointer" data-category="content" data-name="小红书违禁词查询">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-error/10 flex items-center justify-center shrink-0">
+            <i data-lucide="shield-alert" class="w-6 h-6 text-error"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-semibold text-on-surface">小红书违禁词查询</h3>
+            <p class="text-sm text-on-surface-variant mt-1 line-clamp-2">检测笔记内容中的违禁词、敏感词，避免笔记被限流或违规下架</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-outline-variant/20">
+          <p class="text-xs text-on-surface-variant mb-3">推荐工具：句易、零克查词、词爪</p>
+          <button id="btn-tool-xhs-sensitive" class="w-full bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            查看指南
+          </button>
+        </div>
+      </div>
+
+      <!-- 卡片2: Canva使用指南 -->
+      <div class="tool-card bg-surface rounded-xl shadow-card p-5 hover:shadow-float transition-all cursor-pointer" data-category="design" data-name="Canva可画">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <i data-lucide="palette" class="w-6 h-6 text-primary"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-semibold text-on-surface">Canva可画</h3>
+            <p class="text-sm text-on-surface-variant mt-1 line-clamp-2">在线设计平台，海量模板一键套用，轻松制作精美封面、配图</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-outline-variant/20">
+          <p class="text-xs text-on-surface-variant mb-3">适合人群：设计新手、追求效率的创作者</p>
+          <button id="btn-tool-canva" class="w-full bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            查看指南
+          </button>
+        </div>
+      </div>
+
+      <!-- 卡片3: 醒图使用指南 -->
+      <div class="tool-card bg-surface rounded-xl shadow-card p-5 hover:shadow-float transition-all cursor-pointer" data-category="design" data-name="醒图">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-warning/10 flex items-center justify-center shrink-0">
+            <i data-lucide="image" class="w-6 h-6 text-warning"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-semibold text-on-surface">醒图</h3>
+            <p class="text-sm text-on-surface-variant mt-1 line-clamp-2">全能修图APP，智能美颜、滤镜调色、海报制作一站式搞定</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-outline-variant/20">
+          <p class="text-xs text-on-surface-variant mb-3">适合人群：自拍爱好者、人像修图需求者</p>
+          <button id="btn-tool-xingtu" class="w-full bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            查看指南
+          </button>
+        </div>
+      </div>
+
+      <!-- 卡片4: 图片搜索推荐 -->
+      <div class="tool-card bg-surface rounded-xl shadow-card p-5 hover:shadow-float transition-all cursor-pointer" data-category="design" data-name="图片搜索">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center shrink-0">
+            <i data-lucide="search" class="w-6 h-6 text-success"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-semibold text-on-surface">图片搜索推荐</h3>
+            <p class="text-sm text-on-surface-variant mt-1 line-clamp-2">堆糖、花瓣网精选高质量图片素材，灵感采集必备</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-outline-variant/20">
+          <p class="text-xs text-on-surface-variant mb-3">推荐平台：堆糖、花瓣网、Pinterest</p>
+          <button id="btn-tool-image-search" class="w-full bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            查看指南
+          </button>
+        </div>
+      </div>
+
+      <!-- 卡片5: 剪映使用指南 -->
+      <div class="tool-card bg-surface rounded-xl shadow-card p-5 hover:shadow-float transition-all cursor-pointer" data-category="video" data-name="剪映">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <i data-lucide="video" class="w-6 h-6 text-primary"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-semibold text-on-surface">剪映</h3>
+            <p class="text-sm text-on-surface-variant mt-1 line-clamp-2">抖音官方剪辑工具，模板丰富、特效炫酷、一键成片</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-outline-variant/20">
+          <p class="text-xs text-on-surface-variant mb-3">适合人群：短视频创作者、Vlog博主</p>
+          <button id="btn-tool-jianying" class="w-full bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            查看指南
+          </button>
+        </div>
+      </div>
+
+      <!-- 卡片6: 额外工具 - 稿定设计 -->
+      <div class="tool-card bg-surface rounded-xl shadow-card p-5 hover:shadow-float transition-all cursor-pointer" data-category="design" data-name="稿定设计">
+        <div class="flex items-start gap-4">
+          <div class="w-12 h-12 rounded-xl bg-error/10 flex items-center justify-center shrink-0">
+            <i data-lucide="layout-template" class="w-6 h-6 text-error"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-semibold text-on-surface">稿定设计</h3>
+            <p class="text-sm text-on-surface-variant mt-1 line-clamp-2">多场景在线设计工具，小红书封面模板丰富，一键套用</p>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-outline-variant/20">
+          <p class="text-xs text-on-surface-variant mb-3">特点：小红书模板多、尺寸适配完美</p>
+          <button id="btn-tool-gaoding" class="w-full bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            查看指南
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 空状态提示（默认隐藏） -->
+    <div id="empty-state" class="hidden text-center py-16">
+      <i data-lucide="search-x" class="w-16 h-16 text-on-surface-variant/30 mx-auto"></i>
+      <p class="text-sm text-on-surface-variant mt-4">未找到匹配的工具</p>
+    </div>
+
+    <!-- @main-content:end -->
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    $(function() {
+      // 搜索功能
+      $('#search-input').on('input', function() {
+        const keyword = $(this).val().toLowerCase().trim();
+        let visibleCount = 0;
+        
+        $('.tool-card').each(function() {
+          const name = $(this).data('name').toLowerCase();
+          const text = $(this).text().toLowerCase();
+          const isMatch = name.includes(keyword) || text.includes(keyword);
+          
+          if (isMatch || keyword === '') {
+            $(this).show();
+            visibleCount++;
+          } else {
+            $(this).hide();
+          }
+        });
+        
+        // 显示/隐藏空状态
+        if (visibleCount === 0 && keyword !== '') {
+          $('#empty-state').show();
+        } else {
+          $('#empty-state').hide();
+        }
+      });
+      
+      // 分类筛选功能
+      const $filterButtons = $('[id^="filter-"]');
+      
+      $filterButtons.on('click', function() {
+        const filter = $(this).attr('id').replace('filter-', '');
+        
+        // 更新按钮状态
+        $filterButtons.removeClass('text-primary bg-primary/10').addClass('text-on-surface-variant hover:text-on-surface hover:bg-surface-container');
+        $(this).removeClass('text-on-surface-variant hover:text-on-surface hover:bg-surface-container').addClass('text-primary bg-primary/10');
+        
+        // 筛选卡片
+        if (filter === 'all') {
+          $('.tool-card').show();
+        } else {
+          $('.tool-card').each(function() {
+            if ($(this).data('category') === filter) {
+              $(this).show();
+            } else {
+              $(this).hide();
+            }
+          });
+        }
+        
+        // 隐藏空状态
+        $('#empty-state').hide();
+      });
+      
+      // 工具指南按钮点击事件
+      // 后续应实现：点击后弹出模态框展示对应工具的详细使用指南，或跳转到对应的指南详情页
+      $('#btn-tool-xhs-sensitive').on('click', function(e) {
+        e.stopPropagation();
+        console.log('打开小红书违禁词查询工具指南');
+        // 后续可实现：弹出模态框展示句易、零克查词、词爪的使用方法和链接
+      });
+      
+      $('#btn-tool-canva').on('click', function(e) {
+        e.stopPropagation();
+        console.log('打开Canva使用指南');
+        // 后续可实现：弹出模态框展示Canva的详细使用教程和技巧
+      });
+      
+      $('#btn-tool-xingtu').on('click', function(e) {
+        e.stopPropagation();
+        console.log('打开醒图使用指南');
+        // 后续可实现：弹出模态框展示醒图的详细使用教程和技巧
+      });
+      
+      $('#btn-tool-image-search').on('click', function(e) {
+        e.stopPropagation();
+        console.log('打开图片搜索推荐指南');
+        // 后续可实现：弹出模态框展示堆糖、花瓣网的使用方法和搜索技巧
+      });
+      
+      $('#btn-tool-jianying').on('click', function(e) {
+        e.stopPropagation();
+        console.log('打开剪映使用指南');
+        // 后续可实现：弹出模态框展示剪映的详细使用教程和技巧
+      });
+      
+      $('#btn-tool-gaoding').on('click', function(e) {
+        e.stopPropagation();
+        console.log('打开稿定设计使用指南');
+        // 后续可实现：弹出模态框展示稿定设计的详细使用教程和技巧
+      });
+      
+      // 卡片点击事件（整卡可点击）
+      // 后续应实现：点击卡片任意位置打开对应的工具指南
+      $('.tool-card').on('click', function() {
+        const toolName = $(this).data('name');
+        console.log('查看工具指南:', toolName);
+        // 后续可实现：打开对应的工具指南模态框或详情页
+      });
+    });
+  </script>
+</body>
+
+</html>
