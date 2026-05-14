@@ -140,7 +140,7 @@ export default function ImageGuidePage() {
                 alt="AI文案生成界面示意图，展示输入需求和生成文案的过程"
                 width={800}
                 height={400}
-                className="w-full h-48 object-cover rounded-lg"
+                className="w-full h-auto object-contain rounded-lg"
               />
             </div>
             <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
@@ -259,7 +259,7 @@ export default function ImageGuidePage() {
                 alt="AI图片生成指令构建示意图，展示各维度参数组合"
                 width={800}
                 height={400}
-                className="w-full h-40 object-cover rounded-lg"
+                className="w-full h-auto object-contain rounded-lg"
               />
             </div>
 
