@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import {
-  Search,
   MessageSquare,
   Terminal,
   Copy,
@@ -59,7 +58,6 @@ const cases = [
 ];
 
 export default function ImageGuidePage() {
-  const [searchValue, setSearchValue] = useState("");
   const [activeTag, setActiveTag] = useState("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -83,27 +81,13 @@ export default function ImageGuidePage() {
 
   return (
     <div className="min-h-screen">
-      {/* 页面标题和搜索区 */}
+      {/* 页面标题 */}
       <div className="mb-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">图文创作指南</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              掌握 AI 辅助创作技巧，高效产出优质图文内容
-            </p>
-          </div>
-
-          {/* 搜索框 */}
-          <div className="relative w-full md:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="搜索创作技巧、指令模板..."
-              className="w-full bg-muted border-none rounded-lg pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
-            />
-          </div>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-foreground">图文创作指南</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            掌握 AI 辅助创作技巧，高效产出优质图文内容
+          </p>
         </div>
 
         {/* 快捷标签 */}

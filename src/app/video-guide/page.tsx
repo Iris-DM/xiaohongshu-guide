@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import {
-  Search,
   Video,
   Lightbulb,
   Image as ImageIcon,
@@ -151,8 +149,6 @@ const steps: Array<{
 ];
 
 export default function VideoGuidePage() {
-  const [searchValue, setSearchValue] = useState("");
-
   return (
     <div className="min-h-screen">
       {/* 页面标题区 */}
@@ -166,20 +162,6 @@ export default function VideoGuidePage() {
         <p className="text-sm text-muted-foreground max-w-2xl">
           用豆包AI生成视频的可跑指令，按以下步骤操作即可快速生成高质量视频内容
         </p>
-      </div>
-
-      {/* 搜索框 */}
-      <div className="mb-8">
-        <div className="relative max-w-xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <input
-            type="text"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="搜索步骤或指令内容..."
-            className="w-full bg-muted border-none rounded-xl pl-12 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
-          />
-        </div>
       </div>
 
       {/* 步骤列表 */}

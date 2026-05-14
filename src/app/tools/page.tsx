@@ -9,7 +9,6 @@ import {
   Video,
   LayoutTemplate,
   ExternalLink,
-  SearchX,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -84,16 +83,10 @@ const tools = [
 ];
 
 export default function ToolsPage() {
-  const [searchValue, setSearchValue] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
 
   const filteredTools = tools.filter((tool) => {
-    const matchesSearch =
-      searchValue === "" ||
-      tool.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-      tool.description.toLowerCase().includes(searchValue.toLowerCase());
-    const matchesCategory = activeCategory === "all" || tool.category === activeCategory;
-    return matchesSearch && matchesCategory;
+    return activeCategory === "all" || tool.category === activeCategory;
   });
 
   const getIconColorClass = (color: string) => {
@@ -117,20 +110,6 @@ export default function ToolsPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">创作工具大全</h1>
         <p className="text-sm text-muted-foreground mt-2">精选实用工具，助力高效创作</p>
-      </div>
-
-      {/* 搜索框 */}
-      <div className="mb-8">
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="搜索工具..."
-            className="w-full bg-muted border-none rounded-lg pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
-          />
-        </div>
       </div>
 
       {/* 工具分类标签 */}
@@ -190,8 +169,7 @@ export default function ToolsPage() {
         </div>
       ) : (
         <div className="text-center py-16">
-          <SearchX className="w-16 h-16 text-muted-foreground/30 mx-auto" />
-          <p className="text-sm text-muted-foreground mt-4">未找到匹配的工具</p>
+          <p className="text-sm text-muted-foreground">该分类暂无工具</p>
         </div>
       )}
     </div>

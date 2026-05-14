@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, ArrowRight, Lightbulb, ChevronRight, Image as ImageIcon, Video, Wrench } from "lucide-react";
+import { ArrowRight, Lightbulb, ChevronRight, Image as ImageIcon, Video, Wrench } from "lucide-react";
 
 const modules = [
   {
@@ -11,7 +10,7 @@ const modules = [
     description: "学习如何制作吸睛的小红书图文笔记，包括标题撰写、封面设计、正文排版等核心技巧",
     href: "/image-guide",
     icon: ImageIcon,
-    image: "https://images.unsplash.com/photo-1499202709268-2c1c2b1f4b5d?w=800&q=80",
+    image: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage.png&nonce=1b85851d-7bcf-4f56-8113-e5feaff546eb&project_id=7639575009161199679&sign=2b5bb197b95d30c97c9b4b76ffc4a73508a799d4a25cbdce90749ecbc2404f90",
     imageAlt: "图文创作示意图，展示手机屏幕上的精美图文笔记",
   },
   {
@@ -19,7 +18,7 @@ const modules = [
     description: "掌握小红书视频内容创作全流程，从拍摄技巧到剪辑后期，打造高质量视频笔记",
     href: "/video-guide",
     icon: Video,
-    image: "https://images.unsplash.com/photo-1574717025655-4c6c2b1f3b5d?w=800&q=80",
+    image: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage.png&nonce=1b85851d-7bcf-4f56-8113-e5feaff546eb&project_id=7639575009161199679&sign=2b5bb197b95d30c97c9b4b76ffc4a73508a799d4a25cbdce90749ecbc2404f90",
     imageAlt: "视频创作示意图，展示视频剪辑界面和拍摄设备",
   },
   {
@@ -27,78 +26,20 @@ const modules = [
     description: "精选小红书创作者必备工具，包括修图、剪辑、排版等实用工具推荐和使用教程",
     href: "/tools",
     icon: Wrench,
-    image: "https://images.unsplash.com/photo-1531405438579-6b03a7c6a0a7?w=800&q=80",
+    image: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage.png&nonce=1b85851d-7bcf-4f56-8113-e5feaff546eb&project_id=7639575009161199679&sign=2b5bb197b95d30c97c9b4b76ffc4a73508a799d4a25cbdce90749ecbc2404f90",
     imageAlt: "创作工具示意图，展示各种创作工具和软件界面",
   },
 ];
 
-const hotKeywords = [
-  "标题撰写技巧",
-  "封面设计方法",
-  "视频剪辑入门",
-  "爆款内容分析",
-];
-
 export default function HomePage() {
-  const [searchValue, setSearchValue] = useState("");
-  const [showSuggestions, setShowSuggestions] = useState(false);
-
-  const handleSearch = (keyword: string) => {
-    setSearchValue(keyword);
-    setShowSuggestions(false);
-    // TODO: 实现搜索功能
-    console.log("搜索关键词:", keyword);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchValue.trim()) {
-      console.log("搜索提交:", searchValue);
-    }
-  };
-
   return (
     <div className="min-h-screen">
       {/* Hero 区域 */}
       <section className="text-center mb-12">
         <h1 className="text-3xl font-bold text-foreground mb-3">小红书创作指南</h1>
-        <p className="text-base text-muted-foreground mb-8 max-w-2xl mx-auto">
+        <p className="text-base text-muted-foreground max-w-2xl mx-auto">
           从零开始学习小红书内容创作，掌握图文、视频创作技巧，成为优质创作者
         </p>
-
-        {/* 搜索框 */}
-        <div className="max-w-xl mx-auto relative">
-          <div className="relative">
-            <Search className="w-5 h-5 text-muted-foreground absolute left-4 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onFocus={() => setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-              onKeyPress={handleKeyPress}
-              className="w-full bg-card border-none rounded-xl pl-12 pr-4 py-4 text-base text-foreground placeholder:text-muted-foreground/50 shadow-[0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-              placeholder="搜索教程，如：标题技巧、封面设计、视频剪辑..."
-            />
-          </div>
-
-          {/* 搜索提示 */}
-          {showSuggestions && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-card rounded-xl shadow-[0_10px_25px_rgba(0,0,0,0.08)] z-10 overflow-hidden">
-              <div className="p-2">
-                <p className="text-xs text-muted-foreground px-3 py-2">热门搜索</p>
-                {hotKeywords.map((keyword) => (
-                  <button
-                    key={keyword}
-                    onClick={() => handleSearch(keyword)}
-                    className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-muted rounded-lg transition-colors"
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
       </section>
 
       {/* 功能模块卡片 */}
