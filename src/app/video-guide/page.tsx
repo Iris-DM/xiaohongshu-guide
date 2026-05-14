@@ -305,7 +305,7 @@ export default function VideoGuidePage() {
               <div className="border-t border-border/20 bg-muted/30 p-6">
                 <p className="text-xs font-medium text-muted-foreground mb-4 flex items-center gap-1">
                   <ImageIcon className="w-3.5 h-3.5" />
-                  步骤示意图
+                  步骤示意图举例：143期纸箱创作大赛
                 </p>
                 <div
                   className={`grid gap-4 ${step.images.length === 1 ? "grid-cols-1 max-w-md" : step.images.length === 2 ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1 md:grid-cols-3"}`}
