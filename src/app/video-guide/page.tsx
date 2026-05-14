@@ -183,6 +183,11 @@ export default function VideoGuidePage() {
   const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  // 在线生成视频状态
+  const [videoPrompt, setVideoPrompt] = useState("");
+  const [isGeneratingVideo, setIsGeneratingVideo] = useState(false);
+  const [generatedVideoUrl, setGeneratedVideoUrl] = useState<string | null>(null);
+
   const handleCopy = async (text: string, id: string) => {
     await navigator.clipboard.writeText(text);
     setCopiedId(id);
@@ -240,6 +245,34 @@ export default function VideoGuidePage() {
       console.error("Generation error:", error);
     } finally {
       setIsGeneratingPrompt(false);
+    }
+  };
+
+  // 生成视频函数
+  const handleGenerateVideo = async () => {
+    if (!videoPrompt.trim()) return;
+
+    setIsGeneratingVideo(true);
+    setGeneratedVideoUrl(null);
+
+    try {
+      const response = await fetch("/api/generate-video", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: videoPrompt }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.videoUrl) {
+        setGeneratedVideoUrl(data.videoUrl);
+      } else {
+        console.error("Error:", data.error);
+      }
+    } catch (error) {
+      console.error("Generation error:", error);
+    } finally {
+      setIsGeneratingVideo(false);
     }
   };
 
@@ -358,6 +391,85 @@ export default function VideoGuidePage() {
                 </div>
                 <div className="bg-muted rounded-lg p-4 whitespace-pre-wrap text-sm text-foreground">
                   {generatedPrompt}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 在线生成视频 */}
+      <div className="mb-8 bg-card rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
+        <div className="bg-gradient-to-r from-success/10 to-success/5 px-6 py-5 border-b border-border/20">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-success/20 flex items-center justify-center">
+              <Video className="w-5 h-5 text-success" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">在线生成视频</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                输入描述，AI自动生成高质量视频（含音频）
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-6">
+          <div className="space-y-4">
+            {/* 输入区域 */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                视频描述
+              </label>
+              <textarea
+                value={videoPrompt}
+                onChange={(e) => setVideoPrompt(e.target.value)}
+                placeholder="例如：女孩在咖啡厅窗边看书，阳光洒进来，她微笑着看向窗外..."
+                className="w-full px-4 py-3 bg-muted border-none rounded-lg text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-success/30 transition-all resize-none"
+                rows={4}
+              />
+            </div>
+
+            {/* 生成按钮 */}
+            <button
+              onClick={handleGenerateVideo}
+              disabled={isGeneratingVideo || !videoPrompt.trim()}
+              className="w-full px-6 py-3 bg-success text-white rounded-lg font-medium hover:bg-success/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isGeneratingVideo ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  生成中...（约需1-3分钟）
+                </>
+              ) : (
+                <>
+                  <Video className="w-4 h-4" />
+                  开始生成视频
+                </>
+              )}
+            </button>
+
+            {/* 生成结果 */}
+            {generatedVideoUrl && (
+              <div className="mt-6">
+                <h3 className="text-sm font-medium text-foreground mb-3">生成结果</h3>
+                <div className="relative aspect-[9/16] max-w-md mx-auto bg-muted rounded-lg overflow-hidden">
+                  <video
+                    src={generatedVideoUrl}
+                    controls
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="mt-3 flex justify-center">
+                  <a
+                    href={generatedVideoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-sm text-success bg-success/10 rounded-lg hover:bg-success/20 transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    在新窗口打开
+                  </a>
                 </div>
               </div>
             )}

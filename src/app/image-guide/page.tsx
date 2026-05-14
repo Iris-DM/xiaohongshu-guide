@@ -68,6 +68,11 @@ export default function ImageGuidePage() {
   const [isGeneratingText, setIsGeneratingText] = useState(false);
   const [generatedText, setGeneratedText] = useState("");
 
+  // 在线生成图片状态
+  const [imagePrompt, setImagePrompt] = useState("");
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
+
   const handleCopy = async (text: string, id: string) => {
     await navigator.clipboard.writeText(text);
     setCopiedId(id);
@@ -125,6 +130,34 @@ export default function ImageGuidePage() {
       console.error("Generation error:", error);
     } finally {
       setIsGeneratingText(false);
+    }
+  };
+
+  // 生成图片函数
+  const handleGenerateImage = async () => {
+    if (!imagePrompt.trim()) return;
+
+    setIsGeneratingImage(true);
+    setGeneratedImages([]);
+
+    try {
+      const response = await fetch("/api/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: imagePrompt }),
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.imageUrls) {
+        setGeneratedImages(data.imageUrls);
+      } else {
+        console.error("Error:", data.error);
+      }
+    } catch (error) {
+      console.error("Generation error:", error);
+    } finally {
+      setIsGeneratingImage(false);
     }
   };
 
@@ -658,6 +691,90 @@ Definition:
                   </div>
                   <div className="bg-muted rounded-lg p-4 whitespace-pre-wrap text-sm text-foreground">
                     {generatedText}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 在线生成图片 */}
+      <section className="mb-12">
+        <div className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="bg-gradient-to-r from-success/10 to-success/5 px-6 py-5 border-b border-border/20">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-success/20 flex items-center justify-center">
+                <ImagePlus className="w-5 h-5 text-success" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">在线生成图片</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  输入描述，AI自动生成高质量图片
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <div className="space-y-4">
+              {/* 输入区域 */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  图片描述
+                </label>
+                <textarea
+                  value={imagePrompt}
+                  onChange={(e) => setImagePrompt(e.target.value)}
+                  placeholder="例如：温馨的咖啡厅场景，木质桌椅，暖黄色灯光，窗外阳光透入..."
+                  className="w-full px-4 py-3 bg-muted border-none rounded-lg text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-success/30 transition-all resize-none"
+                  rows={4}
+                />
+              </div>
+
+              {/* 生成按钮 */}
+              <button
+                onClick={handleGenerateImage}
+                disabled={isGeneratingImage || !imagePrompt.trim()}
+                className="w-full px-6 py-3 bg-success text-white rounded-lg font-medium hover:bg-success/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isGeneratingImage ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    生成中...（约需10-30秒）
+                  </>
+                ) : (
+                  <>
+                    <ImagePlus className="w-4 h-4" />
+                    开始生成图片
+                  </>
+                )}
+              </button>
+
+              {/* 生成结果 */}
+              {generatedImages.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium text-foreground mb-3">生成结果</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {generatedImages.map((url, index) => (
+                      <div key={index} className="relative aspect-square bg-muted rounded-lg overflow-hidden">
+                        <Image
+                          src={url}
+                          alt={`生成的图片 ${index + 1}`}
+                          fill
+                          className="object-contain"
+                        />
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="absolute bottom-2 right-2 px-3 py-1.5 bg-card/90 backdrop-blur-sm rounded-lg text-xs text-foreground hover:bg-card transition-colors flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          查看大图
+                        </a>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
