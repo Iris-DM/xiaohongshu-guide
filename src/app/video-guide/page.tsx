@@ -328,8 +328,8 @@ export default function VideoGuidePage() {
                           src={img.src}
                           alt={img.alt}
                           width={600}
-                          height={300}
-                          className="w-full h-32 object-cover"
+                          height={400}
+                          className="w-full h-auto object-contain"
                         />
                       ) : null}
                       <div className="p-3">
