@@ -37,7 +37,7 @@ const steps: Array<{
 }> = [
   {
     num: 1,
-    title: "构建图文指令和视频指令",
+    title: "构建图文指令",
     description: "融合多个维度形成高质量生成指令",
     formula: "【场景】 + 【主体/人物】 + 【风格】 + 【光线】 + 【背景】 + 【细节补充】",
     example:
@@ -45,9 +45,9 @@ const steps: Array<{
     tips: "融合项目背景形成图文指令和视频指令，突出主题",
     images: [
       {
-        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514123146137.png&nonce=1deeb779-e98e-434c-9359-c8790131a684&project_id=7639575009161199679&sign=307317a3a6270745e4a47d90b230efd36c6bbce018be82ca20ae86d55c04384e",
-        alt: "构建图文指令和视频指令示例",
-        caption: "构建图文指令和视频指令示例",
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514161039214.png&nonce=db505456-2c21-4899-9682-6ae63a0c9975&project_id=7639575009161199679&sign=d5ae1e1f466583d812e6092333a6aab2726aa9d286a9d819415de974bd67c9cb",
+        alt: "构建图文指令示例",
+        caption: "构建图文指令示例",
       },
     ],
   },
