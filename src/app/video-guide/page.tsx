@@ -103,26 +103,6 @@ const steps: Array<{
   },
   {
     num: 4,
-    title: "输入视频指令",
-    description: "根据人物、动作、环境构建视频指令",
-    formula: "【人物】 + 【动作】 + 【环境】",
-    example:
-      "年轻女性轻轻端起咖啡杯，眼神温柔地看向窗外，手指在杯沿轻轻划过，身后的绿植在微风中轻轻摇曳，阳光在桌面上缓缓移动",
-    elements: [
-      { icon: User, label: "人物", desc: "主体角色描述" },
-      { icon: Activity, label: "动作", desc: "行为与动态" },
-      { icon: MapPin, label: "环境", desc: "场景与氛围" },
-    ],
-    images: [
-      {
-        src: "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?w=600&h=300&fit=crop",
-        alt: "视频指令输入示意",
-        caption: "在视频生成界面输入指令",
-      },
-    ],
-  },
-  {
-    num: 5,
     title: "去版权相关限制",
     description: "优化生成的视频内容",
     content:
@@ -138,6 +118,26 @@ const steps: Array<{
         src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=300&fit=crop",
         alt: "视频预览调整示意",
         caption: "预览并调整视频效果",
+      },
+    ],
+  },
+  {
+    num: 5,
+    title: "输入视频指令",
+    description: "根据人物、动作、环境构建视频指令",
+    formula: "【人物】 + 【动作】 + 【环境】",
+    example:
+      "年轻女性轻轻端起咖啡杯，眼神温柔地看向窗外，手指在杯沿轻轻划过，身后的绿植在微风中轻轻摇曳，阳光在桌面上缓缓移动",
+    elements: [
+      { icon: User, label: "人物", desc: "主体角色描述" },
+      { icon: Activity, label: "动作", desc: "行为与动态" },
+      { icon: MapPin, label: "环境", desc: "场景与氛围" },
+    ],
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?w=600&h=300&fit=crop",
+        alt: "视频指令输入示意",
+        caption: "在视频生成界面输入指令",
       },
     ],
   },
