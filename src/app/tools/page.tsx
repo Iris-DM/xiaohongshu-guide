@@ -9,6 +9,7 @@ import {
   Video,
   LayoutTemplate,
   ExternalLink,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,24 @@ const categories = [
   { id: "content", label: "内容创作" },
   { id: "design", label: "设计工具" },
   { id: "video", label: "视频工具" },
+];
+
+const sensitiveWordTools = [
+  {
+    name: "句易网",
+    url: "https://www.ju1.cn/",
+    description: "专业违禁词查询平台",
+  },
+  {
+    name: "零克查词",
+    url: "http://www.lingkechaci.com/",
+    description: "敏感词检测工具",
+  },
+  {
+    name: "词爪",
+    url: "https://www.cizhua.com/",
+    description: "违禁词查询工具",
+  },
 ];
 
 const tools = [
@@ -84,6 +103,7 @@ const tools = [
 
 export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [showSensitiveModal, setShowSensitiveModal] = useState(false);
 
   const filteredTools = tools.filter((tool) => {
     return activeCategory === "all" || tool.category === activeCategory;
@@ -101,6 +121,12 @@ export default function ToolsPage() {
         return "bg-destructive/10 text-destructive";
       default:
         return "bg-primary/10 text-primary";
+    }
+  };
+
+  const handleGuideClick = (toolId: string) => {
+    if (toolId === "xhs-sensitive") {
+      setShowSensitiveModal(true);
     }
   };
 
@@ -158,7 +184,10 @@ export default function ToolsPage() {
                 </div>
                 <div className="mt-4 pt-4 border-t border-border/20">
                   <p className="text-xs text-muted-foreground mb-3">{tool.tip}</p>
-                  <button className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => handleGuideClick(tool.id)}
+                    className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2"
+                  >
                     <ExternalLink className="w-3.5 h-3.5" />
                     查看指南
                   </button>
@@ -170,6 +199,49 @@ export default function ToolsPage() {
       ) : (
         <div className="text-center py-16">
           <p className="text-sm text-muted-foreground">该分类暂无工具</p>
+        </div>
+      )}
+
+      {/* 违禁词查询工具网址弹窗 */}
+      {showSensitiveModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
+            <button
+              onClick={() => setShowSensitiveModal(false)}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-foreground">小红书违禁词查询工具</h2>
+              <p className="text-sm text-muted-foreground mt-1">选择合适的工具进行违禁词检测</p>
+            </div>
+
+            <div className="space-y-3">
+              {sensitiveWordTools.map((tool, index) => (
+                <a
+                  key={index}
+                  href={tool.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-4 bg-muted rounded-xl hover:bg-muted/80 transition-colors group"
+                >
+                  <div>
+                    <h3 className="font-semibold text-foreground">{tool.name}</h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">{tool.description}</p>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                </a>
+              ))}
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-border/20">
+              <p className="text-xs text-muted-foreground text-center">
+                建议使用多个工具交叉检测，确保内容安全
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </div>
