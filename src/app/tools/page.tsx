@@ -77,7 +77,7 @@ const tools = [
     description: "堆糖、花瓣网精选高质量图片素材，灵感采集必备",
     icon: Search,
     iconColor: "success",
-    tip: "推荐平台：堆糖、花瓣网、Pinterest",
+    tip: "推荐平台：堆糖、花瓣网",
     suitable: "所有创作者",
   },
   {
@@ -106,6 +106,21 @@ export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [showSensitiveModal, setShowSensitiveModal] = useState(false);
   const [showXingtuModal, setShowXingtuModal] = useState(false);
+  const [showImageSearchModal, setShowImageSearchModal] = useState(false);
+
+  // 图片搜索工具数据
+  const imageSearchTools = [
+    {
+      name: "堆糖",
+      description: "发现、收集、分享美好图片的社区，海量优质图片素材",
+      url: "https://www.duitang.com/",
+    },
+    {
+      name: "花瓣网",
+      description: "设计师寻找灵感的图片素材库，高质量设计作品采集",
+      url: "https://huaban.com/",
+    },
+  ];
 
   const filteredTools = tools.filter((tool) => {
     return activeCategory === "all" || tool.category === activeCategory;
@@ -133,6 +148,8 @@ export default function ToolsPage() {
       setShowSensitiveModal(true);
     } else if (toolId === "xingtu") {
       setShowXingtuModal(true);
+    } else if (toolId === "image-search") {
+      setShowImageSearchModal(true);
     } else if (tool?.url) {
       window.open(tool.url, "_blank");
     }
@@ -317,6 +334,55 @@ export default function ToolsPage() {
                   </li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 图片搜索工具模态框 */}
+      {showImageSearchModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-2xl max-w-lg w-full p-6 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowImageSearchModal(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-foreground">图片搜索推荐</h2>
+              <p className="text-sm text-muted-foreground mt-1">优质图片素材搜索平台</p>
+            </div>
+
+            <div className="space-y-4">
+              {imageSearchTools.map((tool, index) => (
+                <div
+                  key={index}
+                  className="border border-border rounded-xl p-4 hover:border-primary/30 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-foreground">{tool.name}</h3>
+                    <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">{tool.description}</p>
+                  <a
+                    href={tool.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                  >
+                    访问网站
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-border">
+              <p className="text-xs text-muted-foreground text-center">
+                💡 建议多个平台配合使用，找到更多优质素材
+              </p>
             </div>
           </div>
         </div>
