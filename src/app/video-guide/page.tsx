@@ -64,9 +64,9 @@ const steps: Array<{
     ],
     images: [
       {
-        src: "https://images.unsplash.com/photo-1542038784-d68edb39f66f?w=600&h=350&fit=crop",
-        alt: "AI生成图片界面示意",
-        caption: "将指令输入AI工具生成图片",
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514123146137.png&nonce=1deeb779-e98e-434c-9359-c8790131a684&project_id=7639575009161199679&sign=307317a3a6270745e4a47d90b230efd36c6bbce018be82ca20ae86d55c04384e",
+        alt: "构建图文指令和视频指令示例",
+        caption: "构建图文指令和视频指令示例",
       },
     ],
   },
