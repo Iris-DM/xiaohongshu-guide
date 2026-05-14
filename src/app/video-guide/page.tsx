@@ -157,6 +157,19 @@ const steps: Array<{
     ],
     video: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2F%E8%B5%9B%E5%8D%9A%E7%BA%B8%E7%AE%B1AI%E5%A4%A7%E8%B5%9B.mp4&nonce=ddb6f533-8d18-46d1-86c8-2ce69ce62ca1&project_id=7639575009161199679&sign=0c705f0f75429a755b71c92c8a412dd3cc23d1fcf80806cc299a70b2eec6f950",
   },
+  {
+    num: 6,
+    title: "手动添加字幕",
+    description: "如果要用口播的话，AI配字幕可能会有错别字，可以用剪映手动添加生成字幕",
+    tips: "建议使用剪映的自动识别字幕功能，然后手动校对修正，提高效率",
+    images: [
+      {
+        src: "https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514165519894.png&nonce=7c6ea017-8bc5-4597-bad5-a49e4b95ef71&project_id=7639575009161199679&sign=dda4b0fd9bafa14b7e75a4495bb0bd26c1782e4d87cf0bf5961b012e9a414f33",
+        alt: "剪映手动添加字幕示例",
+        caption: "",
+      },
+    ],
+  },
 ];
 
 export default function VideoGuidePage() {
@@ -417,7 +430,7 @@ export default function VideoGuidePage() {
                   <Video className="w-3.5 h-3.5" />
                   视频示例
                 </p>
-                <div className="max-w-2xl mx-auto">
+                <div className="max-w-md mx-auto">
                   <video
                     src={step.video}
                     controls
