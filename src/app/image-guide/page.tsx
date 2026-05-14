@@ -153,7 +153,7 @@ Definition:
               <ImagePlus className="w-4 h-4 text-muted-foreground" />
               <span className="text-sm font-medium text-foreground">操作示意图</span>
             </div>
-            <div className="bg-muted rounded-lg p-4 overflow-hidden">
+            <div className="bg-muted rounded-lg p-4 overflow-hidden max-w-[50%] mx-auto">
               <Image
                 src="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514121804767.png&nonce=90abf9e2-df56-4a0d-b368-0207679e7565&project_id=7639575009161199679&sign=627cd044c529257e93a2bbf07c41533c23ed2d6aa91bb1ef4a6e33b74be0d48f"
                 alt="AI文案生成界面示意图，展示输入需求和生成文案的过程"
@@ -325,7 +325,7 @@ Definition:
             </div>
 
             {/* 示意图 */}
-            <div className="bg-muted rounded-lg p-4 mb-5 overflow-hidden">
+            <div className="bg-muted rounded-lg p-4 mb-5 overflow-hidden max-w-[50%] mx-auto">
               <Image
                 src="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514121935560.png&nonce=f0003578-7cb0-43a3-acc1-5155e41dfcac&project_id=7639575009161199679&sign=403e9d59bd00730e567cfec22006569119844feb3082bbe372b0a9013bb297c6"
                 alt="AI图片生成指令构建示意图，展示各维度参数组合"

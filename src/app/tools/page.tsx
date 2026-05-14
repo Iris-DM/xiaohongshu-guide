@@ -109,6 +109,7 @@ export default function ToolsPage() {
   const [showImageSearchModal, setShowImageSearchModal] = useState(false);
   const [showGaodingModal, setShowGaodingModal] = useState(false);
   const [showCanvaModal, setShowCanvaModal] = useState(false);
+  const [showJianyingModal, setShowJianyingModal] = useState(false);
 
   // 图片搜索工具数据
   const imageSearchTools = [
@@ -156,6 +157,8 @@ export default function ToolsPage() {
       setShowGaodingModal(true);
     } else if (toolId === "canva") {
       setShowCanvaModal(true);
+    } else if (toolId === "jianying") {
+      setShowJianyingModal(true);
     } else if (tool?.url) {
       window.open(tool.url, "_blank");
     }
@@ -602,6 +605,72 @@ export default function ToolsPage() {
                 访问Canva官网
                 <ExternalLink className="w-4 h-4" />
               </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 剪映使用指南模态框 */}
+      {showJianyingModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowJianyingModal(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-muted rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-foreground">剪映使用指南</h2>
+              <p className="text-sm text-muted-foreground mt-1">抖音官方剪辑工具，模板丰富、特效炫酷</p>
+            </div>
+
+            <div className="space-y-6">
+              {/* 添加字幕 */}
+              <div>
+                <h3 className="font-semibold text-foreground mb-3">为AI视频添加字幕</h3>
+                <img
+                  src="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514173400469.png&nonce=1c9d8513-5944-4b53-b8af-801418cc6148&project_id=7639575009161199679&sign=07007fb71c5ad117333eb9fc2cef8252580eb20fba5ce4e0e65fdf4cc804c032"
+                  alt="剪映添加字幕"
+                  className="w-full h-auto rounded-xl border border-border object-contain mb-3"
+                />
+                <p className="text-sm text-muted-foreground">
+                  大家可以给前面做的AI视频添加字幕，剪映支持自动识别视频中的语音并生成字幕，也支持手动添加字幕，让视频更加完整专业。
+                </p>
+              </div>
+
+              {/* 使用模板 */}
+              <div className="pt-4 border-t border-border">
+                <h3 className="font-semibold text-foreground mb-3">使用剪映模板快速剪辑</h3>
+                <img
+                  src="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260514173718016.png&nonce=e3092608-d745-4eea-9af9-9e311328ec29&project_id=7639575009161199679&sign=4a15eaf92b647f11e22babe393a871f4be9b2793e8ea1bb35ea99d43ad3f4331"
+                  alt="剪映模板"
+                  className="w-full h-auto rounded-xl border border-border object-contain mb-3"
+                />
+                <p className="text-sm text-muted-foreground">
+                  鼓励大家使用剪映模板进行简单的剪辑，剪映提供了丰富的视频模板，只需替换素材即可快速制作出精美的视频作品，非常适合新手使用。
+                </p>
+              </div>
+
+              {/* 功能介绍 */}
+              <div className="pt-4 border-t border-border">
+                <h3 className="font-semibold text-foreground mb-3">主要功能</h3>
+                <ul className="text-sm text-muted-foreground space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>智能识别字幕：自动识别视频语音，一键生成字幕</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>丰富模板：海量热门模板，一键套用快速出片</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary mt-1">•</span>
+                    <span>炫酷特效：转场、滤镜、贴纸等丰富素材</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
