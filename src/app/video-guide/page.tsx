@@ -1,0 +1,387 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import {
+  Search,
+  Video,
+  Lightbulb,
+  Image as ImageIcon,
+  CheckCircle,
+  AlertCircle,
+  User,
+  Activity,
+  MapPin,
+  Sparkles,
+} from "lucide-react";
+
+interface ImageItem {
+  src: string | null;
+  alt: string;
+  caption: string;
+  showButton?: boolean;
+  showClickIcon?: boolean;
+}
+
+const steps: Array<{
+  num: number;
+  title: string;
+  description: string;
+  formula?: string;
+  example?: string;
+  tips?: string | string[];
+  content?: string;
+  warning?: string;
+  subSteps?: string[];
+  checklist?: string[];
+  elements?: Array<{ icon: typeof User; label: string; desc: string }>;
+  images: ImageItem[];
+}> = [
+  {
+    num: 1,
+    title: "构建图文指令和视频指令",
+    description: "融合多个维度形成高质量生成指令",
+    formula: "【场景】 + 【主体/人物】 + 【风格】 + 【光线】 + 【背景】 + 【细节补充】",
+    example:
+      "室内咖啡厅场景，一位穿着米色针织衫的年轻女性坐在窗边，日系清新风格，柔和自然光从窗户洒入，背景是模糊的绿植和木质装饰，细腻的肤质，温暖舒适的氛围，45度侧面视角",
+    tips: "融合项目背景形成图文指令和视频指令，突出主题",
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1501337848302-500ae6b3635a?w=600&h=300&fit=crop",
+        alt: "咖啡厅场景示例",
+        caption: "场景+主体+风格示意",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1495474789200-6ad8b50b9a23?w=600&h=300&fit=crop",
+        alt: "光线与氛围示例",
+        caption: "光线+背景+氛围示意",
+      },
+    ],
+  },
+  {
+    num: 2,
+    title: "使用新的图文指令生成图片",
+    description: "将构建好的图文指令输入AI生成图片",
+    content:
+      "将第1步构建好的完整图文指令复制到豆包AI的图片生成功能中，等待AI生成符合要求的图片。",
+    checklist: [
+      "确保指令完整包含所有要素",
+      "等待图片生成完成后查看效果",
+      "如不满意可调整指令重新生成",
+    ],
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1542038784-d68edb39f66f?w=600&h=350&fit=crop",
+        alt: "AI生成图片界面示意",
+        caption: "将指令输入AI工具生成图片",
+      },
+    ],
+  },
+  {
+    num: 3,
+    title: "预览图片并找到生成视频入口",
+    description: "点开图片预览，找到生成视频按钮",
+    content: "将生成后的图片点开预览，在左上角找到「生成视频」按钮。",
+    warning: "注意：必须先点开图片预览，才能在左上角看到「生成视频」选项",
+    subSteps: [
+      "点击生成的图片进入预览模式",
+      "在左上角找到「生成视频」按钮",
+      "点击进入视频生成界面",
+    ],
+    images: [
+      {
+        src: null,
+        alt: "左上角「生成视频」按钮位置",
+        caption: "左上角「生成视频」按钮位置",
+        showButton: true,
+      },
+      {
+        src: "https://images.unsplash.com/photo-1551288390-5e9e4a5d5c7a?w=400&h=200&fit=crop",
+        alt: "图片预览界面",
+        caption: "图片预览模式",
+      },
+      {
+        src: null,
+        alt: "点击进入视频生成",
+        caption: "点击进入视频生成",
+        showClickIcon: true,
+      },
+    ],
+  },
+  {
+    num: 4,
+    title: "输入视频指令",
+    description: "根据人物、动作、环境构建视频指令",
+    formula: "【人物】 + 【动作】 + 【环境】",
+    example:
+      "年轻女性轻轻端起咖啡杯，眼神温柔地看向窗外，手指在杯沿轻轻划过，身后的绿植在微风中轻轻摇曳，阳光在桌面上缓缓移动",
+    elements: [
+      { icon: User, label: "人物", desc: "主体角色描述" },
+      { icon: Activity, label: "动作", desc: "行为与动态" },
+      { icon: MapPin, label: "环境", desc: "场景与氛围" },
+    ],
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1493863641943-9b68992a8d07?w=600&h=300&fit=crop",
+        alt: "视频指令输入示意",
+        caption: "在视频生成界面输入指令",
+      },
+    ],
+  },
+  {
+    num: 5,
+    title: "指示词生成后调整去敏",
+    description: "优化生成的视频内容",
+    content:
+      "AI生成视频后，检查视频内容，根据需要调整指示词，去除敏感或不合适的内容，确保视频符合平台规范。",
+    tips: [
+      "检查视频时长是否合适",
+      "确认动作流畅自然",
+      "去除可能的敏感元素",
+      "调整不符合预期的细节",
+    ],
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=300&fit=crop",
+        alt: "视频预览调整示意",
+        caption: "预览并调整视频效果",
+      },
+    ],
+  },
+];
+
+export default function VideoGuidePage() {
+  const [searchValue, setSearchValue] = useState("");
+
+  return (
+    <div className="min-h-screen">
+      {/* 页面标题区 */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+            <Video className="w-5 h-5 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">视频创作指南</h1>
+        </div>
+        <p className="text-sm text-muted-foreground max-w-2xl">
+          用豆包AI生成视频的可跑指令，按以下步骤操作即可快速生成高质量视频内容
+        </p>
+      </div>
+
+      {/* 搜索框 */}
+      <div className="mb-8">
+        <div className="relative max-w-xl">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            placeholder="搜索步骤或指令内容..."
+            className="w-full bg-muted border-none rounded-xl pl-12 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+          />
+        </div>
+      </div>
+
+      {/* 步骤列表 */}
+      <div className="space-y-6">
+        {steps.map((step) => (
+          <div
+            key={step.num}
+            className="bg-card rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden"
+          >
+            <div className="flex items-start gap-6 p-6">
+              {/* 步骤编号 */}
+              <div className="flex-shrink-0">
+                <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-[0_10px_25px_rgba(0,0,0,0.08)]">
+                  <span className="text-2xl font-bold text-primary-foreground">{step.num}</span>
+                </div>
+              </div>
+
+              {/* 步骤内容 */}
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg font-semibold text-foreground mb-1">{step.title}</h2>
+                <p className="text-sm text-muted-foreground mb-4">{step.description}</p>
+
+                {/* 公式 */}
+                {step.formula && (
+                  <div className="bg-muted rounded-xl p-4 mb-4">
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {step.num === 1 ? "指令公式：" : "视频指令要素："}
+                    </p>
+                    <div className="bg-card rounded-lg p-4 border border-border/20">
+                      <p className="text-sm font-medium text-foreground leading-relaxed">
+                        {step.formula.split(" + ").map((part, idx, arr) => (
+                          <span key={idx}>
+                            <span className="text-primary">{part}</span>
+                            {idx < arr.length - 1 && " + "}
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+                    {step.tips && (
+                      <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
+                        <Lightbulb className="w-3.5 h-3.5" />
+                        {step.tips}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* 内容描述 */}
+                {step.content && (
+                  <div className="bg-muted rounded-xl p-4 mb-4">
+                    <p className="text-sm text-muted-foreground leading-relaxed">{step.content}</p>
+                  </div>
+                )}
+
+                {/* 示例指令 */}
+                {step.example && (
+                  <div className="bg-primary/5 rounded-xl p-4 border border-primary/20 mb-4">
+                    <p className="text-xs font-medium text-primary mb-2">📝 示例指令</p>
+                    <p className="text-sm text-foreground leading-relaxed">{step.example}</p>
+                  </div>
+                )}
+
+                {/* 检查列表 */}
+                {step.checklist && (
+                  <div className="flex items-start gap-3 bg-success/10 rounded-xl p-4">
+                    <CheckCircle className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-1">操作要点</p>
+                      <ul className="text-xs text-muted-foreground space-y-1">
+                        {step.checklist.map((item, idx) => (
+                          <li key={idx}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {/* 警告提示 */}
+                {step.warning && (
+                  <div className="bg-warning/10 rounded-lg p-3 flex items-start gap-2 mb-4">
+                    <AlertCircle className="w-4 h-4 text-warning flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-muted-foreground">{step.warning}</p>
+                  </div>
+                )}
+
+                {/* 子步骤 */}
+                {step.subSteps && (
+                  <div className="space-y-2">
+                    {step.subSteps.map((subStep, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-3 bg-muted rounded-lg p-3"
+                      >
+                        <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
+                          <span className="text-xs font-medium text-primary">{idx + 1}</span>
+                        </div>
+                        <p className="text-sm text-foreground">{subStep}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* 要素说明 */}
+                {step.elements && (
+                  <div className="grid grid-cols-3 gap-3 mb-4">
+                    {step.elements.map((elem) => {
+                      const Icon = elem.icon;
+                      return (
+                        <div key={elem.label} className="bg-muted rounded-lg p-3 text-center">
+                          <Icon className="w-5 h-5 text-primary mx-auto mb-2" />
+                          <p className="text-xs font-medium text-foreground">{elem.label}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{elem.desc}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* 提示列表 */}
+                {step.tips && Array.isArray(step.tips) && (
+                  <div className="bg-primary/5 rounded-xl p-4 border border-primary/20">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Sparkles className="w-4 h-4 text-primary" />
+                      <p className="text-sm font-medium text-foreground">优化建议</p>
+                    </div>
+                    <ul className="text-xs text-muted-foreground space-y-2">
+                      {step.tips.map((tip, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 flex-shrink-0" />
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 示意图区域 */}
+            {step.images && step.images.length > 0 && (
+              <div className="border-t border-border/20 bg-muted/30 p-6">
+                <p className="text-xs font-medium text-muted-foreground mb-4 flex items-center gap-1">
+                  <ImageIcon className="w-3.5 h-3.5" />
+                  步骤示意图
+                </p>
+                <div
+                  className={`grid gap-4 ${step.images.length === 1 ? "grid-cols-1 max-w-md" : step.images.length === 2 ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1 md:grid-cols-3"}`}
+                >
+                  {step.images.map((img, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-card rounded-xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                    >
+                      {img.showButton ? (
+                        <div className="h-32 bg-muted flex items-center justify-center relative">
+                          <ImageIcon className="w-12 h-12 text-muted-foreground/30" />
+                          <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
+                            生成视频
+                          </div>
+                        </div>
+                      ) : img.showClickIcon ? (
+                        <div className="h-32 bg-muted flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-full bg-muted-foreground/10 flex items-center justify-center">
+                            <div className="w-0 h-0 border-l-[8px] border-l-muted-foreground/40 border-y-[5px] border-y-transparent ml-1" />
+                          </div>
+                        </div>
+                      ) : img.src ? (
+                        <Image
+                          src={img.src}
+                          alt={img.alt}
+                          width={600}
+                          height={300}
+                          className="w-full h-32 object-cover"
+                        />
+                      ) : null}
+                      <div className="p-3">
+                        <p className="text-xs text-muted-foreground">{img.caption}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* 底部小贴士 */}
+      <div className="mt-12 bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-6">
+        <div className="flex items-start gap-3">
+          <Sparkles className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+          <div>
+            <h3 className="text-base font-semibold text-foreground mb-2">小贴士</h3>
+            <ul className="text-sm text-muted-foreground space-y-2">
+              <li>• 视频生成需要一定时间，请耐心等待</li>
+              <li>• 如视频效果不理想，可以调整指令重新生成</li>
+              <li>• 建议先用图文指令生成满意的图片，再转为视频</li>
+              <li>• 视频指令要简洁明了，突出关键动作</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

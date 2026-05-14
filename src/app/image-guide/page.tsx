@@ -1,0 +1,439 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import {
+  Search,
+  MessageSquare,
+  Terminal,
+  Copy,
+  Check,
+  ImagePlus,
+  Plus,
+  MapPin,
+  User,
+  Palette,
+  Sun,
+  Mountain,
+  Sparkles,
+  Lightbulb,
+  Star,
+  CheckCircle,
+} from "lucide-react";
+
+const tags = [
+  { id: "all", label: "全部" },
+  { id: "text", label: "文案生成" },
+  { id: "image", label: "图片生成" },
+  { id: "prompt", label: "指令模板" },
+];
+
+const dimensions = [
+  { icon: MapPin, label: "场景", desc: "室内/户外/特定环境", color: "primary" },
+  { icon: User, label: "主体/人物", desc: "人物特征/产品/物品", color: "success" },
+  { icon: Palette, label: "风格", desc: "简约/复古/时尚等", color: "warning" },
+  { icon: Sun, label: "光线", desc: "自然光/暖光/冷光", color: "destructive" },
+  { icon: Mountain, label: "背景", desc: "纯色/渐变/实景", color: "primary" },
+  { icon: Sparkles, label: "细节补充", desc: "质感/氛围/视角/文字", color: "success" },
+];
+
+const cases = [
+  {
+    title: "美妆护肤笔记",
+    category: "美妆",
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80",
+    description: "场景：梳妆台前 | 主体：护肤产品 | 风格：清新自然",
+  },
+  {
+    title: "美食探店笔记",
+    category: "美食",
+    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80",
+    description: "场景：餐厅内 | 主体：美食特写 | 风格：温馨诱人",
+  },
+  {
+    title: "穿搭分享笔记",
+    category: "时尚",
+    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&q=80",
+    description: "场景：街拍场景 | 主体：整套穿搭 | 风格：潮流时尚",
+  },
+];
+
+export default function ImageGuidePage() {
+  const [searchValue, setSearchValue] = useState("");
+  const [activeTag, setActiveTag] = useState("all");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleCopy = async (text: string, id: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const textPrompt = `提炼每期BF需求总结核心要点，梳理内容框架，延展笔记内容，分三段输出正文：
+
+1️⃣ 【噱头/思考点】 - 开篇吸引眼球，抛出问题或观点
+2️⃣ 【核心价值】 - 干货内容，提供实用价值或解决方案
+3️⃣ 【互动】 - 引导评论互动，增加笔记活跃度
+
+贴合小红书平台算法与热门流量逻辑，埋下SEO标签`;
+
+  const imagePromptFormula = "【场景】 + 【主体/人物】 + 【风格】 + 【光线】 + 【背景】 + 【细节补充】";
+
+  const imagePromptExample = "场景：午后阳光明媚的咖啡馆窗边\n主体：一位年轻女性，气质优雅，穿着简约米色毛衣\n风格：韩系清新，自然柔美\n光线：侧光照射，面部轮廓柔和\n背景：窗外绿植若隐若现，虚化处理\n细节补充：手持咖啡杯，氛围温暖治愈，45度仰拍视角";
+
+  return (
+    <div className="min-h-screen">
+      {/* 页面标题和搜索区 */}
+      <div className="mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">图文创作指南</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              掌握 AI 辅助创作技巧，高效产出优质图文内容
+            </p>
+          </div>
+
+          {/* 搜索框 */}
+          <div className="relative w-full md:w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="搜索创作技巧、指令模板..."
+              className="w-full bg-muted border-none rounded-lg pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* 快捷标签 */}
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <button
+              key={tag.id}
+              onClick={() => setActiveTag(tag.id)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
+                activeTag === tag.id
+                  ? "text-primary bg-primary/10"
+                  : "text-muted-foreground bg-muted hover:bg-muted/80"
+              }`}
+            >
+              {tag.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 模块一：文心一言/deepseek 辅助生成文案 */}
+      <section id="section-text" className="mb-12">
+        <div className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
+          {/* 模块头部 */}
+          <div className="bg-gradient-to-r from-primary/10 to-primary/5 px-6 py-5 border-b border-border/20">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                <MessageSquare className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">
+                  用文心一言 / DeepSeek 辅助生成文案和标题
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  智能生成贴合小红书平台的高质量文案
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 示意图区域 */}
+          <div className="p-6 border-b border-border/20">
+            <div className="flex items-center gap-2 mb-4">
+              <ImagePlus className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">操作示意图</span>
+            </div>
+            <div className="bg-muted rounded-lg p-4 overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1516321318425-f8391932c8e4?w=800&h=400&fit=crop"
+                alt="AI文案生成界面示意图，展示输入需求和生成文案的过程"
+                width={800}
+                height={400}
+                className="w-full h-48 object-cover rounded-lg"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
+              <Lightbulb className="w-3.5 h-3.5" />
+              在文心一言或 DeepSeek 中输入指令，AI 会自动生成符合小红书风格的文案
+            </p>
+          </div>
+
+          {/* 通用指令内容 */}
+          <div className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Terminal className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">通用指令模板</span>
+              <span className="px-2 py-0.5 text-xs font-medium text-success bg-success/15 rounded-sm">
+                推荐
+              </span>
+            </div>
+
+            {/* 指令代码块 */}
+            <div className="bg-muted rounded-lg overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 bg-muted/80 border-b border-border/20">
+                <span className="text-xs font-medium text-muted-foreground">Prompt 指令</span>
+                <button
+                  onClick={() => handleCopy(textPrompt, "text-prompt")}
+                  className="flex items-center gap-1 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded transition-colors"
+                >
+                  {copiedId === "text-prompt" ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>已复制</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>复制</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="p-4 font-mono text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                {textPrompt}
+              </div>
+            </div>
+
+            {/* 指令要点说明 */}
+            <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                {
+                  num: "1",
+                  title: "提炼核心要点",
+                  desc: "从 BF 需求中提取关键信息，明确内容主题和目标受众",
+                },
+                {
+                  num: "2",
+                  title: "三段式输出",
+                  desc: "噱头吸引 + 核心价值 + 互动引导，结构清晰",
+                },
+                {
+                  num: "3",
+                  title: "SEO优化",
+                  desc: "贴合平台算法，埋入热门关键词和流量标签",
+                },
+              ].map((item) => (
+                <div
+                  key={item.num}
+                  className="bg-card rounded-lg p-4 border border-border/20"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                      <span className="text-xs font-bold text-primary">{item.num}</span>
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{item.title}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 模块二：豆包AI生成图片 */}
+      <section id="section-image" className="mb-12">
+        <div className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
+          {/* 模块头部 */}
+          <div className="bg-gradient-to-r from-success/10 to-success/5 px-6 py-5 border-b border-border/20">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-success/20 flex items-center justify-center">
+                <ImagePlus className="w-5 h-5 text-success" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">用豆包 AI 生成图片</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  两步生成高质量配图，提升笔记视觉吸引力
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 第一步 */}
+          <div className="p-6 border-b border-border/20">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-warning/20 flex items-center justify-center">
+                <span className="text-sm font-bold text-warning">1</span>
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-foreground">构建完整指令</h3>
+                <p className="text-xs text-muted-foreground">融合多个维度形成高质量生成指令</p>
+              </div>
+            </div>
+
+            {/* 示意图 */}
+            <div className="bg-muted rounded-lg p-4 mb-5 overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1547658711-da4353bf764d?w=800&h=400&fit=crop"
+                alt="AI图片生成指令构建示意图，展示各维度参数组合"
+                width={800}
+                height={400}
+                className="w-full h-40 object-cover rounded-lg"
+              />
+            </div>
+
+            {/* 指令公式 */}
+            <div className="bg-muted rounded-lg overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 bg-muted/80 border-b border-border/20">
+                <span className="text-xs font-medium text-muted-foreground">指令公式</span>
+                <button
+                  onClick={() => handleCopy(imagePromptFormula, "formula")}
+                  className="flex items-center gap-1 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded transition-colors"
+                >
+                  {copiedId === "formula" ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>已复制</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>复制</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="p-4">
+                <div className="flex flex-wrap items-center gap-2 text-sm">
+                  {["场景", "主体/人物", "风格", "光线", "背景", "细节补充"].map((item, idx) => (
+                    <span key={idx}>
+                      <span
+                        className={`px-3 py-1.5 rounded-lg font-medium ${
+                          idx % 3 === 0
+                            ? "bg-primary/15 text-primary"
+                            : idx % 3 === 1
+                              ? "bg-success/15 text-success"
+                              : "bg-warning/15 text-warning"
+                        }`}
+                      >
+                        {item}
+                      </span>
+                      {idx < 5 && <Plus className="inline w-4 h-4 text-muted-foreground mx-1" />}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  细节补充包括：质感 / 氛围 / 视角 / 文字等
+                </p>
+              </div>
+            </div>
+
+            {/* 各维度说明 */}
+            <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-3">
+              {dimensions.map((dim) => {
+                const Icon = dim.icon;
+                const colorClass =
+                  dim.color === "primary"
+                    ? "text-primary"
+                    : dim.color === "success"
+                      ? "text-success"
+                      : dim.color === "warning"
+                        ? "text-warning"
+                        : "text-destructive";
+                return (
+                  <div key={dim.label} className="bg-card rounded-lg p-3 border border-border/20">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Icon className={`w-4 h-4 ${colorClass}`} />
+                      <span className="text-xs font-medium text-foreground">{dim.label}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{dim.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 第二步 */}
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-success/20 flex items-center justify-center">
+                <span className="text-sm font-bold text-success">2</span>
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-foreground">使用完整指令生成图片</h3>
+                <p className="text-xs text-muted-foreground">在豆包 AI 中输入指令，一键生成配图</p>
+              </div>
+            </div>
+
+            {/* 完整指令示例 */}
+            <div className="bg-muted rounded-lg overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 bg-muted/80 border-b border-border/20">
+                <span className="text-xs font-medium text-muted-foreground">完整指令示例</span>
+                <button
+                  onClick={() => handleCopy(imagePromptExample, "example")}
+                  className="flex items-center gap-1 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded transition-colors"
+                >
+                  {copiedId === "example" ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" />
+                      <span>已复制</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>复制</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="p-4 font-mono text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                {imagePromptExample}
+              </div>
+            </div>
+
+            {/* 提示信息 */}
+            <div className="mt-4 flex items-start gap-2 bg-primary/5 rounded-lg p-3">
+              <Star className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+              <p className="text-xs text-muted-foreground">
+                提示：可根据实际需求调整各维度描述，多尝试不同组合获得最佳效果
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 实战案例参考 */}
+      <section className="mb-12">
+        <div className="flex items-center gap-2 mb-6">
+          <CheckCircle className="w-5 h-5 text-primary" />
+          <h2 className="text-xl font-semibold text-foreground">实战案例参考</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {cases.map((caseItem) => (
+            <article
+              key={caseItem.title}
+              className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition-shadow"
+            >
+              <div className="aspect-[4/3] bg-muted overflow-hidden">
+                <Image
+                  src={caseItem.image}
+                  alt={caseItem.title}
+                  width={400}
+                  height={300}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2 py-0.5 text-xs font-medium text-primary bg-primary/10 rounded">
+                    {caseItem.category}
+                  </span>
+                  <h3 className="text-sm font-semibold text-foreground">{caseItem.title}</h3>
+                </div>
+                <p className="text-xs text-muted-foreground">{caseItem.description}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
