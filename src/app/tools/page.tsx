@@ -50,6 +50,26 @@ const tools = [
     suitable: "所有小红书创作者",
   },
   {
+    id: "image-search",
+    name: "图片搜索推荐",
+    category: "design",
+    description: "堆糖、花瓣网精选高质量图片素材，灵感采集必备",
+    icon: Search,
+    iconColor: "success",
+    tip: "推荐平台：堆糖、花瓣网",
+    suitable: "所有创作者",
+  },
+  {
+    id: "jianying",
+    name: "剪映",
+    category: "video",
+    description: "抖音官方剪辑工具，模板丰富、特效炫酷、一键成片",
+    icon: Video,
+    iconColor: "primary",
+    tip: "适合人群：短视频创作者、Vlog博主",
+    suitable: "短视频创作者",
+  },
+  {
     id: "canva",
     name: "Canva可画",
     category: "design",
@@ -69,26 +89,6 @@ const tools = [
     iconColor: "warning",
     tip: "适合人群：自拍爱好者、人像修图需求者",
     suitable: "自拍爱好者",
-  },
-  {
-    id: "image-search",
-    name: "图片搜索推荐",
-    category: "design",
-    description: "堆糖、花瓣网精选高质量图片素材，灵感采集必备",
-    icon: Search,
-    iconColor: "success",
-    tip: "推荐平台：堆糖、花瓣网",
-    suitable: "所有创作者",
-  },
-  {
-    id: "jianying",
-    name: "剪映",
-    category: "video",
-    description: "抖音官方剪辑工具，模板丰富、特效炫酷、一键成片",
-    icon: Video,
-    iconColor: "primary",
-    tip: "适合人群：短视频创作者、Vlog博主",
-    suitable: "短视频创作者",
   },
   {
     id: "gaoding",
@@ -183,43 +183,94 @@ export default function ToolsPage() {
 
       {/* 工具卡片列表 */}
       {filteredTools.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredTools.map((tool) => {
-            const Icon = tool.icon;
-            return (
-              <article
-                key={tool.id}
-                className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-5 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition-all cursor-pointer group"
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
-                      getIconColorClass(tool.iconColor)
-                    )}
-                  >
-                    <Icon className="w-6 h-6" />
+        <div className="space-y-8">
+          {/* 其他工具 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filteredTools.filter(tool => !["canva", "xingtu", "gaoding"].includes(tool.id)).map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <article
+                  key={tool.id}
+                  className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-5 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition-all cursor-pointer group"
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={cn(
+                        "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
+                        getIconColorClass(tool.iconColor)
+                      )}
+                    >
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base font-semibold text-foreground">{tool.name}</h3>
+                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                        {tool.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-semibold text-foreground">{tool.name}</h3>
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                      {tool.description}
-                    </p>
+                  <div className="mt-4 pt-4 border-t border-border/20">
+                    <p className="text-xs text-muted-foreground mb-3">{tool.tip}</p>
+                    <button
+                      onClick={() => handleGuideClick(tool.id)}
+                      className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      查看指南
+                    </button>
                   </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-border/20">
-                  <p className="text-xs text-muted-foreground mb-3">{tool.tip}</p>
-                  <button
-                    onClick={() => handleGuideClick(tool.id)}
-                    className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    查看指南
-                  </button>
-                </div>
-              </article>
-            );
-          })}
+                </article>
+              );
+            })}
+          </div>
+
+          {/* 设计工具板块 */}
+          {filteredTools.some(tool => ["canva", "xingtu", "gaoding"].includes(tool.id)) && (
+            <div>
+              <div className="mb-4">
+                <h2 className="text-lg font-bold text-foreground mb-1">设计工具推荐</h2>
+                <p className="text-sm text-muted-foreground">在线设计、修图工具，轻松制作精美内容</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {filteredTools.filter(tool => ["canva", "xingtu", "gaoding"].includes(tool.id)).map((tool) => {
+                  const Icon = tool.icon;
+                  return (
+                    <article
+                      key={tool.id}
+                      className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-5 hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)] transition-all cursor-pointer group"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div
+                          className={cn(
+                            "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
+                            getIconColorClass(tool.iconColor)
+                          )}
+                        >
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base font-semibold text-foreground">{tool.name}</h3>
+                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                            {tool.description}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-4 pt-4 border-t border-border/20">
+                        <p className="text-xs text-muted-foreground mb-3">{tool.tip}</p>
+                        <button
+                          onClick={() => handleGuideClick(tool.id)}
+                          className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          查看指南
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="text-center py-16">
