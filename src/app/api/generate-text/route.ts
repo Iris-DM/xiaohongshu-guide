@@ -74,20 +74,17 @@ Definition:
 请直接输出内容，不要有多余的解释。`;
     }
 
-    const stream = await client.chat({
-      model: "doubao-seed-1-6-pro-241215",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt },
-      ],
-      stream: true,
-    });
+    const messages = [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ];
+    const stream = client.stream(messages, { temperature: 0.7 });
 
     const encoder = new TextEncoder();
     const readableStream = new ReadableStream({
       async start(controller) {
         for await (const chunk of stream) {
-          const content = chunk.choices?.[0]?.delta?.content || "";
+          const content = chunk.content?.toString() || "";
           if (content) {
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
           }
