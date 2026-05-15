@@ -221,6 +221,199 @@ Definition:
         </div>
       </div>
 
+      {/* 在线生成文案 */}
+      <section className="mb-12">
+        <div className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="bg-gradient-to-r from-primary/10 to-primary/5 px-6 py-5 border-b border-border/20">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">在线生成文案</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  输入主题，AI自动生成小红书爆款文案
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <div className="space-y-4">
+              {/* 输入区域 */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  输入主题
+                </label>
+                <textarea
+                  value={textTopic}
+                  onChange={(e) => setTextTopic(e.target.value)}
+                  placeholder="例如：咖啡厅探店、护肤心得、穿搭分享..."
+                  className="w-full px-4 py-3 bg-muted border-none rounded-lg text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none"
+                  rows={3}
+                />
+              </div>
+
+              {/* 模式选择 */}
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-muted-foreground">生成模式：</span>
+                <button
+                  onClick={() => setTextType("simple")}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    textType === "simple"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  通用指令
+                </button>
+                <button
+                  onClick={() => setTextType("advanced")}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    textType === "advanced"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  进阶指令
+                </button>
+              </div>
+
+              {/* 生成按钮 */}
+              <button
+                onClick={handleGenerateText}
+                disabled={isGeneratingText || !textTopic.trim()}
+                className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isGeneratingText ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                    生成中...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    开始生成
+                  </>
+                )}
+              </button>
+
+              {/* 生成结果 */}
+              {generatedText && (
+                <div className="mt-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-sm font-medium text-foreground">生成结果</h3>
+                    <button
+                      onClick={() => handleCopy(generatedText, "generated-text")}
+                      className="flex items-center gap-1 px-3 py-1.5 text-xs text-primary hover:bg-primary/10 rounded transition-colors"
+                    >
+                      {copiedId === "generated-text" ? (
+                        <>
+                          <Check className="w-3.5 h-3.5" />
+                          <span>已复制</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>复制</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  <div className="bg-muted rounded-lg p-4 whitespace-pre-wrap text-sm text-foreground">
+                    {generatedText}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 在线生成图片 */}
+      <section className="mb-12">
+        <div className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="bg-gradient-to-r from-success/10 to-success/5 px-6 py-5 border-b border-border/20">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-success/20 flex items-center justify-center">
+                <ImagePlus className="w-5 h-5 text-success" />
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">在线生成图片</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  输入描述，AI自动生成高质量图片
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6">
+            <div className="space-y-4">
+              {/* 输入区域 */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  图片描述
+                </label>
+                <textarea
+                  value={imagePrompt}
+                  onChange={(e) => setImagePrompt(e.target.value)}
+                  placeholder="例如：温馨的咖啡厅场景，木质桌椅，暖黄色灯光，窗外阳光透入..."
+                  className="w-full px-4 py-3 bg-muted border-none rounded-lg text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-success/30 transition-all resize-none"
+                  rows={4}
+                />
+              </div>
+
+              {/* 生成按钮 */}
+              <button
+                onClick={handleGenerateImage}
+                disabled={isGeneratingImage || !imagePrompt.trim()}
+                className="w-full px-6 py-3 bg-success text-white rounded-lg font-medium hover:bg-success/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isGeneratingImage ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    生成中...（约需10-30秒）
+                  </>
+                ) : (
+                  <>
+                    <ImagePlus className="w-4 h-4" />
+                    开始生成图片
+                  </>
+                )}
+              </button>
+
+              {/* 生成结果 */}
+              {generatedImages.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium text-foreground mb-3">生成结果</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {generatedImages.map((url, index) => (
+                      <div key={index} className="relative aspect-square bg-muted rounded-lg overflow-hidden">
+                        <Image
+                          src={url}
+                          alt={`生成的图片 ${index + 1}`}
+                          fill
+                          className="object-contain"
+                        />
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="absolute bottom-2 right-2 px-3 py-1.5 bg-card/90 backdrop-blur-sm rounded-lg text-xs text-foreground hover:bg-card transition-colors flex items-center gap-1"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          查看大图
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 模块一：文心一言/deepseek 辅助生成文案 */}
       <section id="section-text" className="mb-12">
         <div className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
@@ -585,199 +778,6 @@ Definition:
               <p className="text-xs text-muted-foreground">
                 提示：可根据实际需求调整各维度描述，多尝试不同组合获得最佳效果
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 在线生成文案 */}
-      <section className="mb-12">
-        <div className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
-          <div className="bg-gradient-to-r from-primary/10 to-primary/5 px-6 py-5 border-b border-border/20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-foreground">在线生成文案</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  输入主题，AI自动生成小红书爆款文案
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6">
-            <div className="space-y-4">
-              {/* 输入区域 */}
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  输入主题
-                </label>
-                <textarea
-                  value={textTopic}
-                  onChange={(e) => setTextTopic(e.target.value)}
-                  placeholder="例如：咖啡厅探店、护肤心得、穿搭分享..."
-                  className="w-full px-4 py-3 bg-muted border-none rounded-lg text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all resize-none"
-                  rows={3}
-                />
-              </div>
-
-              {/* 模式选择 */}
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground">生成模式：</span>
-                <button
-                  onClick={() => setTextType("simple")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    textType === "simple"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  }`}
-                >
-                  通用指令
-                </button>
-                <button
-                  onClick={() => setTextType("advanced")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    textType === "advanced"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  }`}
-                >
-                  进阶指令
-                </button>
-              </div>
-
-              {/* 生成按钮 */}
-              <button
-                onClick={handleGenerateText}
-                disabled={isGeneratingText || !textTopic.trim()}
-                className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isGeneratingText ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    生成中...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4" />
-                    开始生成
-                  </>
-                )}
-              </button>
-
-              {/* 生成结果 */}
-              {generatedText && (
-                <div className="mt-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-medium text-foreground">生成结果</h3>
-                    <button
-                      onClick={() => handleCopy(generatedText, "generated-text")}
-                      className="flex items-center gap-1 px-3 py-1.5 text-xs text-primary hover:bg-primary/10 rounded transition-colors"
-                    >
-                      {copiedId === "generated-text" ? (
-                        <>
-                          <Check className="w-3.5 h-3.5" />
-                          <span>已复制</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3.5 h-3.5" />
-                          <span>复制</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  <div className="bg-muted rounded-lg p-4 whitespace-pre-wrap text-sm text-foreground">
-                    {generatedText}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 在线生成图片 */}
-      <section className="mb-12">
-        <div className="bg-card rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden">
-          <div className="bg-gradient-to-r from-success/10 to-success/5 px-6 py-5 border-b border-border/20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-success/20 flex items-center justify-center">
-                <ImagePlus className="w-5 h-5 text-success" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-foreground">在线生成图片</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  输入描述，AI自动生成高质量图片
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6">
-            <div className="space-y-4">
-              {/* 输入区域 */}
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  图片描述
-                </label>
-                <textarea
-                  value={imagePrompt}
-                  onChange={(e) => setImagePrompt(e.target.value)}
-                  placeholder="例如：温馨的咖啡厅场景，木质桌椅，暖黄色灯光，窗外阳光透入..."
-                  className="w-full px-4 py-3 bg-muted border-none rounded-lg text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-success/30 transition-all resize-none"
-                  rows={4}
-                />
-              </div>
-
-              {/* 生成按钮 */}
-              <button
-                onClick={handleGenerateImage}
-                disabled={isGeneratingImage || !imagePrompt.trim()}
-                className="w-full px-6 py-3 bg-success text-white rounded-lg font-medium hover:bg-success/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isGeneratingImage ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    生成中...（约需10-30秒）
-                  </>
-                ) : (
-                  <>
-                    <ImagePlus className="w-4 h-4" />
-                    开始生成图片
-                  </>
-                )}
-              </button>
-
-              {/* 生成结果 */}
-              {generatedImages.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-sm font-medium text-foreground mb-3">生成结果</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {generatedImages.map((url, index) => (
-                      <div key={index} className="relative aspect-square bg-muted rounded-lg overflow-hidden">
-                        <Image
-                          src={url}
-                          alt={`生成的图片 ${index + 1}`}
-                          fill
-                          className="object-contain"
-                        />
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="absolute bottom-2 right-2 px-3 py-1.5 bg-card/90 backdrop-blur-sm rounded-lg text-xs text-foreground hover:bg-card transition-colors flex items-center gap-1"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                          查看大图
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
