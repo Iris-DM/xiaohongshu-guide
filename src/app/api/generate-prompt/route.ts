@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { LLMClient, Config, HeaderUtils } from "coze-coding-dev-sdk";
+
+// 检查是否在扣子沙箱环境
+const isCozeSandbox = process.env.COZE_PROJECT_ENV !== undefined;
 
 export async function POST(request: NextRequest) {
   const { topic, type } = await request.json();
@@ -11,14 +13,40 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const customHeaders = HeaderUtils.extractForwardHeaders(request.headers);
-  const config = new Config();
-  const client = new LLMClient(config, customHeaders);
+  // 如果不在扣子沙箱环境，返回提示信息
+  if (!isCozeSandbox) {
+    const message = `🤖 AI 生成功能仅在扣子开发环境中可用
 
-  let userPrompt = "";
+您已成功部署网站！🎉
 
-  if (type === "image") {
-    userPrompt = `请根据以下主题，生成一个完整的AI图片生成指令。
+如需使用 AI 生成功能，请：
+1. 访问扣子平台创建项目
+2. 或配置您自己的 AI API（如 OpenAI、文心一言等）
+
+当前输入的主题：${topic}
+选择的类型：${type === "image" ? "图片指令" : "视频指令"}`;
+    
+    return new Response(JSON.stringify({ 
+      error: "AI功能需要扣子环境",
+      message: message 
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // 扣子环境中的实现
+  try {
+    const { LLMClient, Config, HeaderUtils } = await import("coze-coding-dev-sdk");
+    
+    const customHeaders = HeaderUtils.extractForwardHeaders(request.headers);
+    const config = new Config();
+    const client = new LLMClient(config, customHeaders);
+
+    let userPrompt = "";
+
+    if (type === "image") {
+      userPrompt = `请根据以下主题，生成一个完整的AI图片生成指令。
 
 主题：${topic}
 
@@ -28,73 +56,59 @@ export async function POST(request: NextRequest) {
 要求：
 1. 每个维度都要详细描述
 2. 符合小红书视觉风格
-3. 突出主题特色
-4. 适合AI图片生成
+3. 指令要完整，可以直接使用
 
-请直接输出指令内容，不需要额外解释。`;
-  } else {
-    userPrompt = `请根据以下主题，生成一个完整的AI视频生成指令。
+请直接输出指令内容。`;
+    } else {
+      userPrompt = `请根据以下主题，生成一个完整的AI视频生成指令。
 
 主题：${topic}
 
 请按照以下格式生成指令：
-- 图文指令：【场景】 + 【主体/人物】 + 【风格】 + 【光线】 + 【背景】 + 【细节补充】
-- 视频指令：基于图片添加【人物动作】+【环境变化】+【镜头运动】
+【场景】 + 【主体/人物】 + 【动作/运动】 + 【风格】 + 【光线】 + 【背景】 + 【细节补充（质感/氛围/视角/镜头运动）】
 
 要求：
-1. 图文指令用于生成静态图片
-2. 视频指令在图片基础上添加动态元素
-3. 符合小红书视频风格
-4. 突出主题特色
+1. 每个维度都要详细描述
+2. 符合小红书视频风格
+3. 包含动态元素和镜头描述
+4. 指令要完整，可以直接使用
 
-请分别输出：
-1. 图文指令：
-2. 视频指令：`;
-  }
+请直接输出指令内容。`;
+    }
 
-  const messages = [
-    {
-      role: "system" as const,
-      content: "你是一个AI创作指令专家，擅长根据主题生成精准的AI图片和视频生成指令。",
-    },
-    { role: "user" as const, content: userPrompt },
-  ];
+    const stream = await client.chat({
+      model: "doubao-seed-1-6-pro-241215",
+      messages: [
+        { role: "user", content: userPrompt },
+      ],
+      stream: true,
+    });
 
-  const encoder = new TextEncoder();
-  const stream = new ReadableStream({
-    async start(controller) {
-      try {
-        const llmStream = client.stream(messages, {
-          model: "doubao-seed-1-8-251228",
-          temperature: 0.7,
-        });
-
-        for await (const chunk of llmStream) {
-          if (chunk.content) {
-            const text = chunk.content.toString();
-            const data = `data: ${JSON.stringify({ content: text })}\n\n`;
-            controller.enqueue(encoder.encode(data));
+    const encoder = new TextEncoder();
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          const content = chunk.choices?.[0]?.delta?.content || "";
+          if (content) {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
           }
         }
-
-        controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+        controller.enqueue(encoder.encode(`data: [DONE]\n\n`));
         controller.close();
-      } catch (error) {
-        console.error("Stream error:", error);
-        const errorMessage = error instanceof Error ? error.message : "生成失败";
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ error: errorMessage })}\n\n`)
-        );
-        controller.close();
-      }
-    },
-  });
+      },
+    });
 
-  return new Response(stream, {
-    headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-    },
-  });
+    return new Response(readableStream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+      },
+    });
+  } catch {
+    return new Response(JSON.stringify({ error: "生成失败" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }
