@@ -32,21 +32,18 @@ export async function POST(request: NextRequest) {
     const config = new Config();
     const client = new VideoGenerationClient(config, customHeaders);
 
-    const result = await client.generate({
-      model: "doubao-seedance-1-0-t2v-250514",
-      prompt: prompt,
-      audio: {
-        enableAudioGeneration: true,
-        enableBackgroundMusic: true,
-        enableSoundEffects: true,
-      },
-      aspectRatio: "9:16",
-      resolution: "720p",
+    const content = [{ type: 'text' as const, text: prompt }];
+    
+    const result = await client.videoGeneration(content, {
+      model: 'doubao-seedance-1-5-pro-251215',
+      duration: 5,
+      ratio: '9:16',
+      resolution: '720p',
     });
 
     return new Response(JSON.stringify({ 
       success: true, 
-      video: result.video 
+      video: result.videoUrl 
     }), {
       status: 200,
       headers: { "Content-Type": "application/json" },

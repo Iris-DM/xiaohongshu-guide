@@ -32,19 +32,28 @@ export async function POST(request: NextRequest) {
     const config = new Config();
     const client = new ImageGenerationClient(config, customHeaders);
 
-    const result = await client.generate({
+    const response = await client.generate({
       model: "doubao-seedream-3-0-t2i-250415",
       prompt: prompt,
       size: "1024x1024",
     });
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      images: result.images 
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    const helper = client.getResponseHelper(response);
+
+    if (helper.success) {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        images: helper.imageUrls 
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    } else {
+      return new Response(JSON.stringify({ error: "图片生成失败", details: helper.errorMessages }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
   } catch {
     return new Response(JSON.stringify({ error: "图片生成失败" }), {
       status: 500,
