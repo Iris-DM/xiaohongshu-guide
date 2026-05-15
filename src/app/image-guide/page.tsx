@@ -203,6 +203,17 @@ Definition:
           </p>
         </div>
 
+        {/* 封面图片 */}
+        <div className="mb-8 rounded-xl overflow-hidden border border-border/20">
+          <Image
+            src="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2Fimage_20260515092411089.png&nonce=62404dda-8555-4139-9e2a-516fd461dc30&project_id=7639575009161199679&sign=5ce170410920ab4f9b542b3d8d36fdc22e54bc846488c0f62843d2b1a3beda0b"
+            alt="图文创作指南封面"
+            width={1200}
+            height={600}
+            className="w-full h-auto object-contain"
+          />
+        </div>
+
         {/* 快捷标签 */}
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
