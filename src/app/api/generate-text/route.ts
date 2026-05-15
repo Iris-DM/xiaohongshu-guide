@@ -74,7 +74,7 @@ Definition:
 请直接输出内容，不要有多余的解释。`;
     }
 
-    const messages = [
+    const messages: Array<{ role: "user" | "system" | "assistant"; content: string }> = [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
     ];

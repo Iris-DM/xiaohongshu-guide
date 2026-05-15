@@ -76,7 +76,9 @@ export async function POST(request: NextRequest) {
 请直接输出指令内容。`;
     }
 
-    const messages = [{ role: "user", content: userPrompt }];
+    const messages: Array<{ role: "user" | "system" | "assistant"; content: string }> = [
+      { role: "user", content: userPrompt }
+    ];
     const stream = client.stream(messages, { temperature: 0.7 });
 
     const encoder = new TextEncoder();
